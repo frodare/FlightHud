@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "flighthud",
+  "version": "${version}",
+
+  "name": "Flight HUD",
+  "description": "Displays a flight styled hud while flying with elytra.",
+  "authors": [
+    "ToroCraft"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/flight-hud",
+    "issues": "https://github.com/frodare/FlightHud/issues",
+    "sources": "https://github.com/frodare/FlightHud"
+  },
+
+  "license": "GPL3",
+  "icon": "assets/flighthud/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.torocraft.flighthud.FlightHud"
+    ]
+  },
+  "mixins": [
+    "flighthud.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.2",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}
