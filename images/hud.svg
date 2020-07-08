@@ -7,6 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="212.5238"
+   inkscape:export-xdpi="212.5238"
+   inkscape:export-filename="/home/charleshoward/git/FlightHud/images/hud-diagram.png"
    sodipodi:docname="hud.svg"
    inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
    id="svg8"
@@ -344,7 +347,7 @@
          style="font-size:3.22512px;text-align:end;text-anchor:end;fill:#0000ff;stroke-width:0.241884"
          y="119.49794"
          x="49.085938"
-         sodipodi:role="line">Elevelvation</tspan><tspan
+         sodipodi:role="line">Height</tspan><tspan
          id="tspan1007"
          style="font-size:3.22512px;text-align:end;text-anchor:end;fill:#0000ff;stroke-width:0.241884"
          y="123.52934"
@@ -352,7 +355,7 @@
          sodipodi:role="line" /><tspan
          id="tspan1009"
          style="font-size:3.22512px;text-align:end;text-anchor:end;fill:#0000ff;stroke-width:0.241884"
-         y="127.56074"
+         y="127.56075"
          x="49.085938"
          sodipodi:role="line" /><tspan
          id="tspan1011"
