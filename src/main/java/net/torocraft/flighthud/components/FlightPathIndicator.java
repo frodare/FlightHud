@@ -31,6 +31,10 @@ public class FlightPathIndicator extends HudComponent {
     y += i(deltaPitch * dim.degreesPerPixel);
     x += i(deltaHeading * dim.degreesPerPixel);
 
+    if (y < dim.tFrame || y > dim.bFrame || x < dim.lFrame || x > dim.rFrame) {
+      return;
+    }
+
     int l = x - 3;
     int r = x + 3;
     int t = y - 3;

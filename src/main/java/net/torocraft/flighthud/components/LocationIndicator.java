@@ -18,8 +18,8 @@ public class LocationIndicator extends HudComponent {
   public void render(MatrixStack m, float partial, MinecraftClient client) {
     TextRenderer fontRenderer = client.textRenderer;
    
-    int x = dim.margin;
-    int y = dim.height - dim.margin;
+    int x = dim.lFrame;
+    int y = dim.bFrame + 2;
 
     int xLoc = client.player.getBlockPos().getX();
     int zLoc = client.player.getBlockPos().getZ();

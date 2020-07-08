@@ -20,10 +20,11 @@ public class HeadingIndicator extends HudComponent {
   @Override
   public void render(MatrixStack m, float partial, MinecraftClient client) {
     TextRenderer fontRenderer = client.textRenderer;
-    int width = i(dim.width * 0.5d);
-    int left = i((dim.width - width) / 2);
-    int right = width + left;
-    int top = i(dim.height * 0.1d);
+    int left = dim.lFrame;
+    int right = dim.rFrame;
+    int top = dim.tFrame - 10;
+
+
     int yText = top - 7;
 
     int northOffset = i(computer.heading * dim.degreesPerPixel);
@@ -59,6 +60,7 @@ public class HeadingIndicator extends HudComponent {
   }
 
   private static String headingToDirection(int degrees) {
+    degrees = Math.abs(degrees) % 360;
     switch (degrees) {
       case 0:
         return "N";
@@ -76,6 +78,7 @@ public class HeadingIndicator extends HudComponent {
   }
 
   private static String headingToAxis(int degrees) {
+    degrees = Math.abs(degrees) % 360;
     switch (degrees) {
       case 0:
         return "-Z";

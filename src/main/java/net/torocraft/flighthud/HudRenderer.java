@@ -25,12 +25,11 @@ public class HudRenderer extends HudComponent {
     new ElytraHealthIndicator(computer, dim)
   };
 
-  public HudRenderer() {
-    System.out.println("************************************* ");
-    System.out.println("************************************* ");
-    System.out.println("*********  start   **** ");
-    System.out.println("************************************* ");
-    System.out.println("************************************* ");
+  protected void drawBoxx(MatrixStack m, int x, int y, int w, int h) {
+    drawHorizontalLine(m, x, x + w, y, COLOR_WARN);
+    drawHorizontalLine(m, x, x + w, y + h, COLOR_WARN);
+    drawVerticalLine(m, x, y, y + h, COLOR_WARN);
+    drawVerticalLine(m, x + w, y, y + h, COLOR_WARN);
   }
 
   @Override
@@ -39,11 +38,16 @@ public class HudRenderer extends HudComponent {
       return;
     }
 
+    
+
     computer.update(client, partial);
     dim.update(client);
 
     for (HudComponent component : components) {
       component.render(m, partial, client);
     }
+
+
+    //drawBoxx(m, dim.lFrame, dim.tFrame, dim.wFrame, dim.hFrame);
   }
 }

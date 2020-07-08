@@ -23,8 +23,8 @@ public class ElytraHealthIndicator extends HudComponent {
       return;
     }
     TextRenderer fontRenderer = client.textRenderer;
-    int x = dim.margin;
-    int y = dim.margin - 30;
+    int x = dim.xMid;
+    int y = dim.bFrame + 3;
 
     drawBox(m, x - 4, y - 2, 30, 10);
     fontRenderer.draw(m, "E", x - 10, y, COLOR);

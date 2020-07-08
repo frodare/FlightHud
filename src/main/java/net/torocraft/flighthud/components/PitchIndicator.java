@@ -40,6 +40,10 @@ public class PitchIndicator extends HudComponent {
   private void drawDegreeBar(MatrixStack matrixStack, TextRenderer fontRenderer, int degree,
       int y) {
 
+    if (y < dim.tFrame || y > dim.bFrame) {
+      return;
+    }
+
     int dashes = degree < 0 ? 4 : 1;
 
     drawHorizontalLineDashed(matrixStack, pitchData.l1, pitchData.l2, y, COLOR, dashes);
@@ -80,7 +84,7 @@ public class PitchIndicator extends HudComponent {
     public int r2;
 
     public void update(Dimensions dim) {
-      width = i(dim.width / 3);
+      width = i(dim.wScreen / 3);
       int left = width;
 
       mid = i((width / 2) + left);
