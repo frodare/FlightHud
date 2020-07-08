@@ -2,6 +2,9 @@ package net.torocraft.flighthud;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -19,6 +22,7 @@ public class FlightComputer {
   public double altitude;
   public Integer groundLevel;
   public Double distanceFromGround;
+  public Double elytraHealth;
 
   public void update(MinecraftClient client, float partial) {
     velocity = client.player.getVelocity();
@@ -31,6 +35,16 @@ public class FlightComputer {
     distanceFromGround = computeDistanceFromGround(client, altitude, groundLevel);
     flightPitch = computeFlightPitch(velocity, pitch);
     flightHeading = computeFlightHeading(velocity, heading);
+    elytraHealth = computeElytraHealth(client);
+  }
+
+  private Double computeElytraHealth(MinecraftClient client) {
+    ItemStack stack = client.player.getEquippedStack(EquipmentSlot.CHEST);
+    if (stack != null && stack.getItem() == Items.ELYTRA) {
+      double remain = ((double)stack.getMaxDamage() - (double)stack.getDamage()) / (double)stack.getMaxDamage();
+      return remain * 100d;
+    }
+    return null;
   }
 
   private static double computeFlightPitch(Vec3d velocity, double pitch) {

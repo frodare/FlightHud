@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
 
-  private HudRenderer hud = new HudRenderer();
+  private final HudRenderer hud = new HudRenderer();
 
   @Shadow
   private MinecraftClient client;
