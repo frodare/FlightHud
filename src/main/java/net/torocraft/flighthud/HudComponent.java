@@ -25,14 +25,12 @@ public abstract class HudComponent extends DrawableHelper {
     GlStateManager.popMatrix();
   }
 
-  protected double wrapHeading(double degree) {
-    while (degree < 0) {
-      degree += 360;
+  protected double wrapHeading(double degrees) {
+    degrees = degrees % 360;
+    while (degrees < 0) {
+      degrees += 360;
     }
-    while (degree >= 360) {
-      degree -= 360;
-    }
-    return degree;
+    return degrees;
   }
 
   protected void drawRightAlignedFont(MinecraftClient client, MatrixStack m, String s, int x,

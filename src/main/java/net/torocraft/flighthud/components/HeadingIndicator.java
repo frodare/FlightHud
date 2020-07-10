@@ -59,8 +59,8 @@ public class HeadingIndicator extends HudComponent {
     }
   }
 
-  private static String headingToDirection(int degrees) {
-    degrees = Math.abs(degrees) % 360;
+  private String headingToDirection(int degrees) {
+    degrees = i(wrapHeading(degrees));
     switch (degrees) {
       case 0:
         return "N";
@@ -77,8 +77,8 @@ public class HeadingIndicator extends HudComponent {
     }
   }
 
-  private static String headingToAxis(int degrees) {
-    degrees = Math.abs(degrees) % 360;
+  private String headingToAxis(int degrees) {
+    degrees = i(wrapHeading(degrees));
     switch (degrees) {
       case 0:
         return "-Z";
