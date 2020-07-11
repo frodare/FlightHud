@@ -1,6 +1,6 @@
 package net.torocraft.flighthud;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 public class Dimensions {
 
@@ -22,10 +22,10 @@ public class Dimensions {
   @Deprecated
   public int margin;
 
-  public void update(MinecraftClient client) {
-    hScreen = client.getWindow().getScaledHeight();
-    wScreen = client.getWindow().getScaledWidth();
-    degreesPerPixel = i(hScreen / client.options.fov);
+  public void update(Minecraft client) {
+    hScreen = client.getMainWindow().getScaledHeight();
+    wScreen = client.getMainWindow().getScaledWidth();
+    degreesPerPixel = i(hScreen / client.gameSettings.fov);
     xMid = i(wScreen / 2);
     yMid = i(hScreen / 2);
     margin = i(wScreen * 0.1d);

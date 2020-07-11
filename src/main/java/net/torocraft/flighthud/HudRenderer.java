@@ -1,7 +1,9 @@
 package net.torocraft.flighthud;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
+// import net.minecraft.client.MinecraftClient;
+// import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.components.AltitudeIndicator;
 import net.torocraft.flighthud.components.ElytraHealthIndicator;
 import net.torocraft.flighthud.components.FlightPathIndicator;
@@ -26,8 +28,8 @@ public class HudRenderer extends HudComponent {
   };
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient client) {
-    if (!client.player.isFallFlying()) {
+  public void render(MatrixStack m, float partial, Minecraft client) {
+    if (!client.player.isElytraFlying()) {
       return;
     }
 

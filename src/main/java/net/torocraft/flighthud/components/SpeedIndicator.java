@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -16,7 +16,7 @@ public class SpeedIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+  public void render(MatrixStack m, float partial, Minecraft mc) {
     int top = dim.tFrame;
     int bottom = dim.bFrame;
 

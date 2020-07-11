@@ -1,21 +1,30 @@
 package net.torocraft.flighthud;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import java.awt.Color;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 
-public abstract class HudComponent extends DrawableHelper {
+public abstract class HudComponent extends AbstractGui {
   public static int COLOR = Color.GREEN.getRGB();
   public static int COLOR_WARN = Color.RED.getRGB();
 
-  public abstract void render(MatrixStack m, float partial, MinecraftClient client);
+  public abstract void render(MatrixStack m, float partial, Minecraft mc);
 
   protected int i(double d) {
     return (int) Math.round(d);
   }
 
+  protected void drawHorizontalLine(MatrixStack m, int x1, int x2, int y, int color) {
+    func_238465_a_(m, x1, x2, y, color);
+  }
+
+  protected void drawVerticalLine(MatrixStack m, int x, int y1, int y2, int color) {
+    func_238473_b_(m, x, y1, y2, color);
+  }
+
+  @SuppressWarnings("deprecation")
   protected void drawPointer(MatrixStack m, int x, int y, float rot) {
     GlStateManager.pushMatrix();
     GlStateManager.translated((float) x, (float) y, 0);
@@ -33,17 +42,16 @@ public abstract class HudComponent extends DrawableHelper {
     return degrees;
   }
 
-  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y) {
+  protected void drawFont(Minecraft mc, MatrixStack m, String s, float x, float y) {
     drawFont(mc, m, s, x, y, COLOR);
   }
 
-  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y, int color) {
-    mc.textRenderer.draw(m, s, x, y, COLOR);
+  protected void drawFont(Minecraft mc, MatrixStack m, String s, float x, float y, int color) {
+    mc.fontRenderer.func_238421_b_(m, s, x, y, COLOR);
   }
 
-  protected void drawRightAlignedFont(MinecraftClient mc, MatrixStack m, String s, int x,
-      int y) {
-    int w = mc.textRenderer.getWidth(s);
+  protected void drawRightAlignedFont(Minecraft mc, MatrixStack m, String s, int x, int y) {
+    int w = mc.fontRenderer.getStringWidth(s);
     drawFont(mc, m, s, x - w, y);
   }
 

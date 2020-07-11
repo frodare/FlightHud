@@ -1,11 +1,8 @@
 package net.torocraft.flighthud;
 
-import net.fabricmc.api.ModInitializer;
+import net.minecraftforge.fml.common.Mod;
 
-public class FlightHud implements ModInitializer {
-
-    @Override
-    public void onInitialize() {
-
-    }
+@Mod(FlightHud.MODID)
+public class FlightHud {
+  public static final String MODID = "flighthud";
 }

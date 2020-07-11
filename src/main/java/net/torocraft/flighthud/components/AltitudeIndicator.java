@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -16,7 +16,7 @@ public class AltitudeIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+  public void render(MatrixStack m, float partial, Minecraft mc) {
     int top = dim.tFrame;
     int bottom = dim.bFrame;
 
@@ -58,7 +58,7 @@ public class AltitudeIndicator extends HudComponent {
     }
   }
 
-  private void drawHeightIndicator(MinecraftClient client, MatrixStack m, int x, int top, int h) {
+  private void drawHeightIndicator(Minecraft client, MatrixStack m, int x, int top, int h) {
     int bottom = top + h;
     double blocksPerPixel = (double) h / (double) (client.world.getHeight() + 64);
     int yAlt = bottom - i((computer.altitude + 64) * blocksPerPixel);
@@ -68,7 +68,8 @@ public class AltitudeIndicator extends HudComponent {
 
     if (computer.groundLevel != null) {
       int yGroundLevel = bottom - i((computer.groundLevel + 64) * blocksPerPixel);
-      fill(m, x - 3, yGroundLevel + 2, x, yFloor, COLOR);
+      // func_238467_a_() = fill()
+      func_238467_a_(m, x - 3, yGroundLevel + 2, x, yFloor, COLOR);
     }
 
     drawHorizontalLine(m, x - 6, x - 1, top, COLOR);
