@@ -1,7 +1,6 @@
 package net.torocraft.flighthud.components;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
@@ -18,27 +17,25 @@ public class PitchIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient client) {
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
     pitchData.update(dim);
 
-    TextRenderer fontRenderer = client.textRenderer;
     int horizonOffset = i(computer.pitch * dim.degreesPerPixel);
     int yHorizon = dim.yMid + horizonOffset;
 
     for (int i = 20; i <= 90; i = i + 20) {
       int offset = i(dim.degreesPerPixel * i);
-      drawDegreeBar(m, fontRenderer, -i, yHorizon + offset);
-      drawDegreeBar(m, fontRenderer, i, yHorizon - offset);
+      drawDegreeBar(mc, m, -i, yHorizon + offset);
+      drawDegreeBar(mc, m, i, yHorizon - offset);
     }
 
     pitchData.l1 -= pitchData.margin;
     pitchData.r2 += pitchData.margin;
-    drawDegreeBar(m, fontRenderer, 0, yHorizon);
+    drawDegreeBar(mc, m, 0, yHorizon);
 
   }
 
-  private void drawDegreeBar(MatrixStack matrixStack, TextRenderer fontRenderer, int degree,
-      int y) {
+  private void drawDegreeBar(MinecraftClient mc, MatrixStack m, int degree, int y) {
 
     if (y < dim.tFrame || y > dim.bFrame) {
       return;
@@ -46,31 +43,31 @@ public class PitchIndicator extends HudComponent {
 
     int dashes = degree < 0 ? 4 : 1;
 
-    drawHorizontalLineDashed(matrixStack, pitchData.l1, pitchData.l2, y, COLOR, dashes);
-    drawHorizontalLineDashed(matrixStack, pitchData.r1, pitchData.r2, y, COLOR, dashes);
+    drawHorizontalLineDashed(m, pitchData.l1, pitchData.l2, y, COLOR, dashes);
+    drawHorizontalLineDashed(m, pitchData.r1, pitchData.r2, y, COLOR, dashes);
 
     if (degree == 0) {
       int width = i((pitchData.l2 - pitchData.l1) * 0.25d);
       int l1 = pitchData.l2 - width;
       int r2 = pitchData.r1 + width;
-      drawHorizontalLineDashed(matrixStack, l1, pitchData.l2, y + 3, COLOR, 3);
-      drawHorizontalLineDashed(matrixStack, pitchData.r1, r2, y + 3, COLOR, 3);
-      drawHorizontalLineDashed(matrixStack, l1, pitchData.l2, y + 6, COLOR, 3);
-      drawHorizontalLineDashed(matrixStack, pitchData.r1, r2, y + 6, COLOR, 3);
+      drawHorizontalLineDashed(m, l1, pitchData.l2, y + 3, COLOR, 3);
+      drawHorizontalLineDashed(m, pitchData.r1, r2, y + 3, COLOR, 3);
+      drawHorizontalLineDashed(m, l1, pitchData.l2, y + 6, COLOR, 3);
+      drawHorizontalLineDashed(m, pitchData.r1, r2, y + 6, COLOR, 3);
       return;
     }
 
     int sideTickHeight = degree >= 0 ? 5 : -5;
-    drawVerticalLine(matrixStack, pitchData.l1, y, y + sideTickHeight, COLOR);
-    drawVerticalLine(matrixStack, pitchData.r2, y, y + sideTickHeight, COLOR);
+    drawVerticalLine(m, pitchData.l1, y, y + sideTickHeight, COLOR);
+    drawVerticalLine(m, pitchData.r2, y, y + sideTickHeight, COLOR);
 
     int fontVerticalOffset = degree >= 0 ? 0 : 6;
 
-    fontRenderer.draw(matrixStack, String.format("%d", Math.abs(degree)), pitchData.r2 + 6,
-        (float) y - fontVerticalOffset, COLOR);
+    drawFont(mc, m, String.format("%d", Math.abs(degree)), pitchData.r2 + 6,
+        (float) y - fontVerticalOffset);
 
-    fontRenderer.draw(matrixStack, String.format("%d", Math.abs(degree)), pitchData.l1 - 17,
-        (float) y - fontVerticalOffset, COLOR);
+    drawFont(mc, m, String.format("%d", Math.abs(degree)), pitchData.l1 - 17,
+        (float) y - fontVerticalOffset);
   }
 
   private static class PitchIndicatorData {

@@ -1,7 +1,6 @@
 package net.torocraft.flighthud.components;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
@@ -17,9 +16,7 @@ public class AltitudeIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient client) {
-    TextRenderer fontRenderer = client.textRenderer;
-
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
     int top = dim.tFrame;
     int bottom = dim.bFrame;
 
@@ -32,15 +29,15 @@ public class AltitudeIndicator extends HudComponent {
     int yFloor = dim.yMid - floorOffset;
     int xAltText = right + 5;
 
-    drawHeightIndicator(client, m, left - 1, dim.yMid, bottom - dim.yMid);
+    drawHeightIndicator(mc, m, left - 1, dim.yMid, bottom - dim.yMid);
 
-    fontRenderer.draw(m, String.format("%.0f", computer.altitude), xAltText, dim.yMid - 3, COLOR);
+    drawFont(mc, m, String.format("%.0f", computer.altitude), xAltText, dim.yMid - 3);
     drawBox(m, xAltText - 3, dim.yMid - 5, 25, 10);
 
-    fontRenderer.draw(m, "G", xAltText - 10, bottom + 3, COLOR);
+    drawFont(mc, m, "G", xAltText - 10, bottom + 3);
     String heightText = computer.distanceFromGround == null ? "??"
         : String.format("%d", i(computer.distanceFromGround));
-    fontRenderer.draw(m, heightText, xAltText, bottom + 3, COLOR);
+    drawFont(mc, m, heightText, xAltText, bottom + 3);
     drawBox(m, xAltText - 3, bottom + 1, 25, 10);
 
     for (int i = 0; i < 1000; i = i + 10) {
@@ -54,7 +51,7 @@ public class AltitudeIndicator extends HudComponent {
       if (i % 50 == 0) {
         drawHorizontalLine(m, left, right + 2, y, color);
         if (y > dim.yMid + 7 || y < dim.yMid - 7) {
-          fontRenderer.draw(m, String.format("%d", i), xAltText, y - 3, COLOR);
+          drawFont(mc, m, String.format("%d", i), xAltText, y - 3);
         }
       }
       drawHorizontalLine(m, left, right, y, color);

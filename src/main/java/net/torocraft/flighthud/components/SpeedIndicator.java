@@ -16,7 +16,7 @@ public class SpeedIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient client) {
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
     int top = dim.tFrame;
     int bottom = dim.bFrame;
 
@@ -28,7 +28,7 @@ public class SpeedIndicator extends HudComponent {
     int yFloor = dim.yMid - floorOffset;
 
     int xSpeedText = left - 5;
-    drawRightAlignedFont(client, m, String.format("%.2f", computer.speed), xSpeedText, dim.yMid - 3);
+    drawRightAlignedFont(mc, m, String.format("%.2f", computer.speed), xSpeedText, dim.yMid - 3);
     drawBox(m, xSpeedText - 30, dim.yMid - 5, 30, 10);
 
     for (double i = 0; i <= 35; i = i + 0.25) {
@@ -41,7 +41,7 @@ public class SpeedIndicator extends HudComponent {
       if (i % 1 == 0) {
         drawHorizontalLine(m, left - 2, right, y, COLOR);
         if (y > dim.yMid + 7 || y < dim.yMid - 7) {
-          drawRightAlignedFont(client, m, String.format("%.0f", i), xSpeedText, y - 3);
+          drawRightAlignedFont(mc, m, String.format("%.0f", i), xSpeedText, y - 3);
         }
       }
       drawHorizontalLine(m, left, right, y, COLOR);

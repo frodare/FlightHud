@@ -33,10 +33,18 @@ public abstract class HudComponent extends DrawableHelper {
     return degrees;
   }
 
-  protected void drawRightAlignedFont(MinecraftClient client, MatrixStack m, String s, int x,
+  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y) {
+    drawFont(mc, m, s, x, y, COLOR);
+  }
+
+  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y, int color) {
+    mc.textRenderer.draw(m, s, x, y, COLOR);
+  }
+
+  protected void drawRightAlignedFont(MinecraftClient mc, MatrixStack m, String s, int x,
       int y) {
-    int w = client.textRenderer.getWidth(s);
-    client.textRenderer.draw(m, s, x - w, y, COLOR);
+    int w = mc.textRenderer.getWidth(s);
+    drawFont(mc, m, s, x - w, y);
   }
 
   protected void drawBox(MatrixStack m, int x, int y, int w, int h) {
