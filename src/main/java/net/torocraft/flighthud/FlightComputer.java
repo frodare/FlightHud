@@ -111,8 +111,8 @@ public class FlightComputer {
     return toHeading(client.player.rotationYaw);
   }
 
-  private static double computeSpeed(MinecraftClient client) {
-    return client.player.getVelocity().length() * TICKS_PER_SECOND;
+  private static double computeSpeed(Minecraft client) {
+    return client.player.getMotion().length() * TICKS_PER_SECOND;
   }
 
   private static double toHeading(double yawDegrees) {
