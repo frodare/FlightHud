@@ -31,12 +31,11 @@ public class SpeedIndicator extends HudComponent {
     drawRightAlignedFont(mc, m, String.format("%.2f", computer.speed), xSpeedText, dim.yMid - 3);
     drawBox(m, xSpeedText - 30, dim.yMid - 5, 30, 10);
 
-    for (double i = 0; i <= 35; i = i + 0.25) {
+    for (double i = 0; i <= 100; i = i + 0.25) {
 
       int y = i(dim.hScreen - i * unitPerPixel) - yFloor;
       if (y < top || y > (bottom - 5))
         continue;
-
 
       if (i % 1 == 0) {
         drawHorizontalLine(m, left - 2, right, y, COLOR);

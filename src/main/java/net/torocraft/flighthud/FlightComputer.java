@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class FlightComputer {
-  private static final double VELOCITY_FACTOR = 3.6 * 2;
+  private static final double TICKS_PER_SECOND = 20;
 
   public Vector3d velocity;
   public double speed;
@@ -111,8 +111,8 @@ public class FlightComputer {
     return toHeading(client.player.rotationYaw);
   }
 
-  private static double computeSpeed(Minecraft client) {
-    return client.player.getMotion().length() * VELOCITY_FACTOR;
+  private static double computeSpeed(MinecraftClient client) {
+    return client.player.getVelocity().length() * TICKS_PER_SECOND;
   }
 
   private static double toHeading(double yawDegrees) {
