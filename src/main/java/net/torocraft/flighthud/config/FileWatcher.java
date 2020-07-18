@@ -1,5 +1,6 @@
 package net.torocraft.flighthud.config;
 
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.nio.file.WatchService;
 public class FileWatcher implements Runnable {
   private final File file;
   private final Path filename;
+  private final Path parent;
   private final Listener listener;
 
   @FunctionalInterface
@@ -31,13 +33,13 @@ public class FileWatcher implements Runnable {
     this.file = file;
     this.listener = listener;
     this.filename = file.toPath().getFileName();
+    this.parent = file.toPath().getParent();
   }
 
   @Override
   public void run() {
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
-      Path path = file.toPath().getParent();
-      path.register(watchService, ENTRY_MODIFY);
+      this.parent.register(watchService, ENTRY_MODIFY, ENTRY_CREATE);
       boolean poll = true;
       while (poll) {
         poll = pollEvents(watchService);
