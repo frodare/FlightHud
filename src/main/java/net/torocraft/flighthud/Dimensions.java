@@ -1,46 +1,45 @@
 package net.torocraft.flighthud;
 
 import net.minecraft.client.MinecraftClient;
+import net.torocraft.flighthud.config.Config;
 
 public class Dimensions {
 
-  public static final double FRAME_RATIO = 0.6d;
+  public float hScreen;
+  public float wScreen;
+  public float degreesPerPixel;
+  public float xMid;
+  public float yMid;
 
-  public int hScreen;
-  public int wScreen;
-  public double degreesPerPixel;
-  public int xMid;
-  public int yMid;
-
-  public int wFrame;
-  public int hFrame;
-  public int lFrame;
-  public int rFrame;
-  public int tFrame;
-  public int bFrame;
-
-  @Deprecated
-  public int margin;
+  public float wFrame;
+  public float hFrame;
+  public float lFrame;
+  public float rFrame;
+  public float tFrame;
+  public float bFrame;
 
   public void update(MinecraftClient client) {
+    Config c = FlightHud.CONFIG;
     hScreen = client.getWindow().getScaledHeight();
     wScreen = client.getWindow().getScaledWidth();
-    degreesPerPixel = i(hScreen / client.options.fov);
-    xMid = i(wScreen / 2);
-    yMid = i(hScreen / 2);
-    margin = i(wScreen * 0.1d);
 
-    wFrame = i(wScreen * FRAME_RATIO);
-    hFrame = i(hScreen * FRAME_RATIO);
+    if (c.scale != 1d && c.scale > 0) {
+      hScreen = hScreen * c.scale;
+      wScreen = wScreen * c.scale;
+    }
 
-    lFrame = i(((double)wScreen - (double)wFrame) / 2);
+    degreesPerPixel = (float) (hScreen / client.options.fov);
+    xMid = wScreen / 2;
+    yMid = hScreen / 2;
+
+    wFrame = wScreen * c.width;
+    hFrame = hScreen * c.height;
+
+    lFrame = ((wScreen - wFrame) / 2) + c.xOffset;
     rFrame = lFrame + wFrame;
 
-    tFrame = i(((double)hScreen - (double)hFrame) / 2);
+    tFrame = ((hScreen - hFrame) / 2) + c.yOffset;
     bFrame = tFrame + hFrame;
   }
 
-  private int i(double d) {
-    return (int) Math.round(d);
-  }
 }

@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
-	id 'maven-publish'
+  id 'fabric-loom' version '0.4-SNAPSHOT'
+  id 'maven-publish'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -14,60 +14,60 @@ minecraft {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.16.1"
-	mappings "net.fabricmc:yarn:1.16.1+build.9:v2"
-	modImplementation "net.fabricmc:fabric-loader:0.8.8+build.202"
+  minecraft "com.mojang:minecraft:1.16.1"
+  mappings "net.fabricmc:yarn:1.16.1+build.9:v2"
+  modImplementation "net.fabricmc:fabric-loader:0.8.8+build.202"
 
-	//Fabric api
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.14.0+build.371-1.16"
+  //Fabric api
+  modImplementation "net.fabricmc.fabric-api:fabric-api:0.14.0+build.371-1.16"
 }
 
 processResources {
-	inputs.property "version", project.version
+  inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
-		expand "version": project.version
-	}
+  from(sourceSets.main.resources.srcDirs) {
+    include "fabric.mod.json"
+    expand "version": project.version
+  }
 
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
-	}
+  from(sourceSets.main.resources.srcDirs) {
+    exclude "fabric.mod.json"
+  }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
+  options.encoding = "UTF-8"
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 // if it is present.
 // If you remove this task, sources will not be generated.
 task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
+  classifier = "sources"
+  from sourceSets.main.allSource
 }
 
 jar {
-	from "LICENSE"
+  from "LICENSE"
 }
 
 // configure the maven publication
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
-		gpr(MavenPublication) {
-			from(components.java)
-		}
-	}
+  publications {
+    mavenJava(MavenPublication) {
+      // add all the jars that should be included when publishing to maven
+      artifact(remapJar) {
+        builtBy remapJar
+      }
+      artifact(sourcesJar) {
+        builtBy remapSourcesJar
+      }
+    }
+    gpr(MavenPublication) {
+      from(components.java)
+    }
+  }
 }

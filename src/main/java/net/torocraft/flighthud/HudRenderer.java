@@ -15,15 +15,11 @@ public class HudRenderer extends HudComponent {
   private final Dimensions dim = new Dimensions();
   private final FlightComputer computer = new FlightComputer();
 
-  private final HudComponent[] components = new HudComponent[] {
-    new FlightPathIndicator(computer, dim), 
-    new LocationIndicator(dim),
-    new HeadingIndicator(computer, dim), 
-    new SpeedIndicator(computer, dim),
-    new AltitudeIndicator(computer, dim),
-    new PitchIndicator(computer, dim),
-    new ElytraHealthIndicator(computer, dim)
-  };
+  private final HudComponent[] components =
+      new HudComponent[] {new FlightPathIndicator(computer, dim), new LocationIndicator(dim),
+          new HeadingIndicator(computer, dim), new SpeedIndicator(computer, dim),
+          new AltitudeIndicator(computer, dim), new PitchIndicator(computer, dim),
+          new ElytraHealthIndicator(computer, dim)};
 
   @Override
   public void render(MatrixStack m, float partial, MinecraftClient client) {
@@ -31,11 +27,23 @@ public class HudRenderer extends HudComponent {
       return;
     }
 
-    computer.update(client, partial);
-    dim.update(client);
+    try {
+      m.push();
 
-    for (HudComponent component : components) {
-      component.render(m, partial, client);
+      if (FlightHud.CONFIG.scale != 1d) {
+        float scale = 1 / (float) FlightHud.CONFIG.scale;
+        m.scale(scale, scale, scale);
+      }
+
+      computer.update(client, partial);
+      dim.update(client);
+
+      for (HudComponent component : components) {
+        component.render(m, partial, client);
+      }
+      m.pop();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

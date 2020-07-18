@@ -9,20 +9,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class FlightComputer {
-  private static final double TICKS_PER_SECOND = 20;
+  private static final float TICKS_PER_SECOND = 20;
 
   public Vec3d velocity;
-  public double speed;
-  public double pitch;
-  public double heading;
+  public float speed;
+  public float pitch;
+  public float heading;
   public Vec3d flightPath;
-  public double flightPitch;
-  public double flightHeading;
-  public double roll;
-  public double altitude;
+  public float flightPitch;
+  public float flightHeading;
+  public float roll;
+  public float altitude;
   public Integer groundLevel;
-  public Double distanceFromGround;
-  public Double elytraHealth;
+  public Float distanceFromGround;
+  public Float elytraHealth;
 
   public void update(MinecraftClient client, float partial) {
     velocity = client.player.getVelocity();
@@ -38,35 +38,35 @@ public class FlightComputer {
     elytraHealth = computeElytraHealth(client);
   }
 
-  private Double computeElytraHealth(MinecraftClient client) {
+  private Float computeElytraHealth(MinecraftClient client) {
     ItemStack stack = client.player.getEquippedStack(EquipmentSlot.CHEST);
     if (stack != null && stack.getItem() == Items.ELYTRA) {
-      double remain = ((double)stack.getMaxDamage() - (double)stack.getDamage()) / (double)stack.getMaxDamage();
-      return remain * 100d;
+      float remain = ((float)stack.getMaxDamage() - (float)stack.getDamage()) / (float)stack.getMaxDamage();
+      return remain * 100f;
     }
     return null;
   }
 
-  private static double computeFlightPitch(Vec3d velocity, double pitch) {
+  private static float computeFlightPitch(Vec3d velocity, float pitch) {
     if (velocity.length() < 0.01) {
       return pitch;
     }
     Vec3d n = velocity.normalize();
-    return 90 - Math.toDegrees(Math.acos(n.y));
+    return (float) (90 - Math.toDegrees(Math.acos(n.y)));
   }
 
-  private static double computeFlightHeading(Vec3d velocity, double heading) {
+  private static float computeFlightHeading(Vec3d velocity, float heading) {
     if (velocity.length() < 0.01) {
       return heading;
     }
-    return toHeading(Math.toDegrees(-Math.atan2(velocity.x, velocity.z)));
+    return toHeading((float)Math.toDegrees(-Math.atan2(velocity.x, velocity.z)));
   }
 
-  private static double computeRoll(MinecraftClient client) {
-    return Math.toDegrees(client.player.elytraRoll);
+  private static float computeRoll(MinecraftClient client) {
+    return (float) Math.toDegrees(client.player.elytraRoll);
   }
 
-  private static double computePitch(MinecraftClient client, float parital) {
+  private static float computePitch(MinecraftClient client, float parital) {
     return client.player.getPitch(parital) * -1;
   }
 
@@ -91,27 +91,27 @@ public class FlightComputer {
     return ground == null ? null : ground.getY();
   }
 
-  private static Double computeDistanceFromGround(MinecraftClient client, double altitude,
+  private static Float computeDistanceFromGround(MinecraftClient client, float altitude,
       Integer groundLevel) {
     if (groundLevel == null) {
       return null;
     }
-    return Math.max(0d, altitude - groundLevel);
+    return Math.max(0f, altitude - groundLevel);
   }
 
-  private static double computeAltitude(MinecraftClient client) {
-    return client.player.getPos().y - 1;
+  private static float computeAltitude(MinecraftClient client) {
+    return (float) client.player.getPos().y - 1;
   }
 
-  private static double computeHeading(MinecraftClient client) {
+  private static float computeHeading(MinecraftClient client) {
     return toHeading(client.player.yaw);
   }
 
-  private static double computeSpeed(MinecraftClient client) {
-    return client.player.getVelocity().length() * TICKS_PER_SECOND;
+  private static float computeSpeed(MinecraftClient client) {
+    return (float) client.player.getVelocity().length() * TICKS_PER_SECOND;
   }
 
-  private static double toHeading(double yawDegrees) {
+  private static float toHeading(float yawDegrees) {
     return (yawDegrees + 180) % 360;
   }
 }

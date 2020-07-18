@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
+import net.torocraft.flighthud.FlightHud;
 import net.torocraft.flighthud.HudComponent;
 
 public class FlightPathIndicator extends HudComponent {
@@ -18,15 +19,19 @@ public class FlightPathIndicator extends HudComponent {
 
   @Override
   public void render(MatrixStack m, float partial, MinecraftClient client) {
-    double deltaPitch = computer.pitch - computer.flightPitch;
-    double deltaHeading = wrapHeading(computer.flightHeading) - wrapHeading(computer.heading);
+    if (!FlightHud.CONFIG.flightPath_show) {
+      return;
+    }
+
+    float deltaPitch = computer.pitch - computer.flightPitch;
+    float deltaHeading = wrapHeading(computer.flightHeading) - wrapHeading(computer.heading);
     
     if (deltaHeading < -180) {
       deltaHeading += 360;
     }
 
-    int y = dim.yMid;
-    int x = dim.xMid;
+    float y = dim.yMid;
+    float x = dim.xMid;
 
     y += i(deltaPitch * dim.degreesPerPixel);
     x += i(deltaHeading * dim.degreesPerPixel);
@@ -35,19 +40,19 @@ public class FlightPathIndicator extends HudComponent {
       return;
     }
 
-    int l = x - 3;
-    int r = x + 3;
-    int t = y - 3;
-    int b = y + 3;
+    float l = x - 3;
+    float r = x + 3;
+    float t = y - 3;
+    float b = y + 3;
 
-    drawVerticalLine(m, l, t, b, COLOR);
-    drawVerticalLine(m, r, t, b, COLOR);
+    drawVerticalLine(m, l, t, b);
+    drawVerticalLine(m, r, t, b);
 
-    drawHorizontalLine(m, l, r, t, COLOR);
-    drawHorizontalLine(m, l, r, b, COLOR);
+    drawHorizontalLine(m, l, r, t);
+    drawHorizontalLine(m, l, r, b);
 
-    drawVerticalLine(m, x, t - 5, t, COLOR);
-    drawHorizontalLine(m, l - 4, l, y, COLOR);
-    drawHorizontalLine(m, r, r + 4, y, COLOR);
+    drawVerticalLine(m, x, t - 5, t);
+    drawHorizontalLine(m, l - 4, l, y);
+    drawHorizontalLine(m, r, r + 4, y);
   }
 }
