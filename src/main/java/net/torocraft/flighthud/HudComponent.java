@@ -1,7 +1,6 @@
 package net.torocraft.flighthud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.awt.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
@@ -11,12 +10,13 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Matrix4f;
+import net.torocraft.flighthud.config.HudConfig;
 
 public abstract class HudComponent extends DrawableHelper {
-  public static int COLOR = Color.GREEN.getRGB();
-  public static float HALF_THICKNESS = 0.5f;
 
   public abstract void render(MatrixStack m, float partial, MinecraftClient client);
+
+  public static HudConfig CONFIG;
 
   protected int i(double d) {
     return (int) Math.round(d);
@@ -26,8 +26,8 @@ public abstract class HudComponent extends DrawableHelper {
     m.push();
     m.translate(x, y, 0);
     m.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(rot + 45));
-    drawVerticalLine(m, 0, 0, 5, COLOR);
-    drawHorizontalLine(m, 0, 5, 0, COLOR);
+    drawVerticalLine(m, 0, 0, 5, CONFIG.color);
+    drawHorizontalLine(m, 0, 5, 0, CONFIG.color);
     m.pop();
   }
 
@@ -40,12 +40,12 @@ public abstract class HudComponent extends DrawableHelper {
   }
 
   protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y) {
-    drawFont(mc, m, s, x, y, COLOR);
+    drawFont(mc, m, s, x, y, CONFIG.color);
   }
 
   protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y,
       int color) {
-    mc.textRenderer.draw(m, s, x, y, COLOR);
+    mc.textRenderer.draw(m, s, x, y, CONFIG.color);
   }
 
   protected void drawRightAlignedFont(MinecraftClient mc, MatrixStack m, String s, float x,
@@ -87,7 +87,8 @@ public abstract class HudComponent extends DrawableHelper {
       x1 = x2;
       x2 = i;
     }
-    fill(matrices, x1 - HALF_THICKNESS, y - HALF_THICKNESS, x2 + HALF_THICKNESS, y + HALF_THICKNESS);
+    fill(matrices, x1 - CONFIG.halfThickness, y - CONFIG.halfThickness, x2 + CONFIG.halfThickness,
+        y + CONFIG.halfThickness);
   }
 
   protected void drawVerticalLine(MatrixStack matrices, float x, float y1, float y2) {
@@ -97,7 +98,8 @@ public abstract class HudComponent extends DrawableHelper {
       y2 = i;
     }
 
-    fill(matrices, x - HALF_THICKNESS, y1 + HALF_THICKNESS, x + HALF_THICKNESS, y2 - HALF_THICKNESS);
+    fill(matrices, x - CONFIG.halfThickness, y1 + CONFIG.halfThickness, x + CONFIG.halfThickness,
+        y2 - CONFIG.halfThickness);
   }
 
 
@@ -119,7 +121,7 @@ public abstract class HudComponent extends DrawableHelper {
       y1 = y2;
       y2 = j;
     }
-    int color = COLOR;
+    int color = CONFIG.color;
     float alpha = (float) (color >> 24 & 255) / 255.0F;
     float r = (float) (color >> 16 & 255) / 255.0F;
     float g = (float) (color >> 8 & 255) / 255.0F;

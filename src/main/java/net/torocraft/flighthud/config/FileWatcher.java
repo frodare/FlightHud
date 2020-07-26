@@ -22,11 +22,12 @@ public class FileWatcher implements Runnable {
     void onUpdate();
   }
 
-  public static Thread watch(File file, Listener listener) {
-    Thread thread = new Thread(new FileWatcher(file, listener));
+  public static FileWatcher watch(File file, Listener listener) {
+    FileWatcher watcher = new FileWatcher(file, listener);
+    Thread thread = new Thread(watcher);
     thread.setDaemon(true);
     thread.start();
-    return thread;
+    return watcher;
   }
 
   private FileWatcher(File file, Listener listener) {

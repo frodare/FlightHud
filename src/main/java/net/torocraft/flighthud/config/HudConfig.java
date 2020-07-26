@@ -1,6 +1,11 @@
 package net.torocraft.flighthud.config;
 
-public class Config {
+import java.awt.Color;
+
+public class HudConfig implements IConfig {
+  public transient int color = Color.GREEN.getRGB();
+  public transient float halfThickness = 0.5f;
+
   public boolean watchForConfigChanges = false;
 
   public float width = 0.6f;
@@ -40,5 +45,27 @@ public class Config {
   public boolean heading_showScale = true;
   public boolean heading_showReadout = true;
   public boolean heading_showOrdinals = true;
+
+  @Override
+  public void update() {
+    updateThickness();
+    updateColor();
+  }
+
+  private void updateThickness() {
+    try {
+      halfThickness = thickness / 2;
+    } catch (Exception e) {
+      halfThickness = 0.5f;
+    }
+  }
+
+  private void updateColor() {
+    try {
+      color = new Color(color_red, color_green, color_blue).getRGB();
+    } catch (Exception e) {
+      color = Color.GREEN.getRGB();
+    }
+  }
 
 }

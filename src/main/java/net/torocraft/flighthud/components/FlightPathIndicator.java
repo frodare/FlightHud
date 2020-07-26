@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
-import net.torocraft.flighthud.FlightHud;
 import net.torocraft.flighthud.HudComponent;
 
 public class FlightPathIndicator extends HudComponent {
@@ -19,7 +18,7 @@ public class FlightPathIndicator extends HudComponent {
 
   @Override
   public void render(MatrixStack m, float partial, MinecraftClient client) {
-    if (!FlightHud.CONFIG.flightPath_show) {
+    if (!CONFIG.flightPath_show) {
       return;
     }
 

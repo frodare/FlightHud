@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
-import net.torocraft.flighthud.FlightHud;
 import net.torocraft.flighthud.HudComponent;
 
 public class AltitudeIndicator extends HudComponent {
@@ -30,16 +29,16 @@ public class AltitudeIndicator extends HudComponent {
     float yFloor = dim.yMid - floorOffset;
     float xAltText = right + 5;
 
-    if (FlightHud.CONFIG.altitude_showGroundInfo) {
+    if (CONFIG.altitude_showGroundInfo) {
       drawHeightIndicator(mc, m, left - 1, dim.yMid, bottom - dim.yMid);
     }
 
-    if (FlightHud.CONFIG.altitude_showReadout) {
+    if (CONFIG.altitude_showReadout) {
       drawFont(mc, m, String.format("%.0f", computer.altitude), xAltText, dim.yMid - 3);
       drawBox(m, xAltText - 2, dim.yMid - 4.5f, 28, 10);
     }
 
-    if (FlightHud.CONFIG.altitude_showHeight) {
+    if (CONFIG.altitude_showHeight) {
       drawFont(mc, m, "G", xAltText - 10, bottom + 3);
       String heightText = computer.distanceFromGround == null ? "??"
           : String.format("%d", i(computer.distanceFromGround));
@@ -47,7 +46,7 @@ public class AltitudeIndicator extends HudComponent {
       drawBox(m, xAltText - 2, bottom + 1.5f, 28, 10);
     }
 
-    if (FlightHud.CONFIG.altitude_showScale) {
+    if (CONFIG.altitude_showScale) {
       for (int i = 0; i < 1000; i = i + 10) {
 
         float y = (dim.hScreen - i * blocksPerPixel) - yFloor;
@@ -56,7 +55,7 @@ public class AltitudeIndicator extends HudComponent {
 
         if (i % 50 == 0) {
           drawHorizontalLine(m, left, right + 2, y);
-          if (!FlightHud.CONFIG.altitude_showReadout || y > dim.yMid + 7 || y < dim.yMid - 7) {
+          if (!CONFIG.altitude_showReadout || y > dim.yMid + 7 || y < dim.yMid - 7) {
             drawFont(mc, m, String.format("%d", i), xAltText, y - 3);
           }
         }

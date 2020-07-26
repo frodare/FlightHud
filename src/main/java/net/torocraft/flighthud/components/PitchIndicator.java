@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
-import net.torocraft.flighthud.FlightHud;
 import net.torocraft.flighthud.HudComponent;
 
 public class PitchIndicator extends HudComponent {
@@ -24,12 +23,12 @@ public class PitchIndicator extends HudComponent {
     float horizonOffset = computer.pitch * dim.degreesPerPixel;
     float yHorizon = dim.yMid + horizonOffset;
 
-    if (FlightHud.CONFIG.pitchLadder_showLadder) {
+    if (CONFIG.pitchLadder_showLadder) {
       drawLadder(mc, m, yHorizon);
     }
 
-    drawReferenceMark(mc, m, yHorizon, FlightHud.CONFIG.pitchLadder_optimumClimbAngle);
-    drawReferenceMark(mc, m, yHorizon, FlightHud.CONFIG.pitchLadder_optimumGlideAngle);
+    drawReferenceMark(mc, m, yHorizon, CONFIG.pitchLadder_optimumClimbAngle);
+    drawReferenceMark(mc, m, yHorizon, CONFIG.pitchLadder_optimumGlideAngle);
     
     pitchData.l1 -= pitchData.margin;
     pitchData.r2 += pitchData.margin;
@@ -38,7 +37,7 @@ public class PitchIndicator extends HudComponent {
   }
 
   private void drawLadder(MinecraftClient mc, MatrixStack m, float yHorizon) {
-    int degreesPerBar = FlightHud.CONFIG.pitchLadder_degreesPerBar;
+    int degreesPerBar = CONFIG.pitchLadder_degreesPerBar;
 
     if (degreesPerBar < 1) {
       degreesPerBar = 20;

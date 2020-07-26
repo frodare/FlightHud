@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
-import net.torocraft.flighthud.FlightHud;
 import net.torocraft.flighthud.HudComponent;
 
 public class SpeedIndicator extends HudComponent {
@@ -30,13 +29,13 @@ public class SpeedIndicator extends HudComponent {
 
     float xSpeedText = left - 5;
 
-    if (FlightHud.CONFIG.speed_showReadout) {
+    if (CONFIG.speed_showReadout) {
       drawRightAlignedFont(mc, m, String.format("%.2f", computer.speed), xSpeedText, dim.yMid - 3);
       drawBox(m, xSpeedText - 29.5f, dim.yMid - 4.5f, 30, 10);
     }
 
 
-    if (FlightHud.CONFIG.speed_showScale) {
+    if (CONFIG.speed_showScale) {
       for (float i = 0; i <= 100; i = i + 0.25f) {
         float y = dim.hScreen - i * unitPerPixel - yFloor;
         if (y < top || y > (bottom - 5))
@@ -44,7 +43,7 @@ public class SpeedIndicator extends HudComponent {
 
         if (i % 1 == 0) {
           drawHorizontalLine(m, left - 2, right, y);
-          if (!FlightHud.CONFIG.speed_showReadout || y > dim.yMid + 7 || y < dim.yMid - 7) {
+          if (!CONFIG.speed_showReadout || y > dim.yMid + 7 || y < dim.yMid - 7) {
             drawRightAlignedFont(mc, m, String.format("%.0f", i), xSpeedText, y - 3);
           }
         }
