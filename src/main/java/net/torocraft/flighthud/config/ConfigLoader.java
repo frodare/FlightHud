@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.torocraft.flighthud.FlightHud;
 
@@ -15,13 +17,22 @@ public class ConfigLoader {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Map<ConfigType, File> files = new ConcurrentHashMap<>();
   private static final Map<ConfigType, FileWatcher> watchers = new ConcurrentHashMap<>();
+  private static final Map<ConfigType, Consumer<IConfig>> updateHandlers = new HashMap<>();
 
-  public enum ConfigType { MIN, FULL, SETTINGS }
+  static {
+    updateHandlers.put(ConfigType.FULL, config -> FlightHud.CONFIG_FULL = (HudConfig) config);
+    updateHandlers.put(ConfigType.MIN, config -> FlightHud.CONFIG_MIN = (HudConfig) config);
+    updateHandlers.put(ConfigType.SETTINGS, config -> FlightHud.CONFIG_SETTINGS = (SettingsConfig) config);
+  }
+
+  public enum ConfigType {
+    MIN, FULL, SETTINGS
+  }
 
   public static void load() {
-    FlightHud.CONFIG_SETTINGS = load(ConfigType.SETTINGS, SettingsConfig.class);
-    FlightHud.CONFIG_FULL = load(ConfigType.FULL, HudConfig.class);
-    FlightHud.CONFIG_MIN = load(ConfigType.MIN, HudConfig.class);
+    load(ConfigType.SETTINGS, SettingsConfig.class);
+    load(ConfigType.FULL, HudConfig.class);
+    load(ConfigType.MIN, HudConfig.class);
   }
 
   public static void save() {
@@ -30,14 +41,14 @@ public class ConfigLoader {
     save(FlightHud.CONFIG_MIN, ConfigType.MIN);
   }
 
-  private static <T extends IConfig> T load(ConfigType type, Class<T> configClass) {
+  private static <T extends IConfig> void load(ConfigType type, Class<T> configClass) {
     File file = getFile(type);
 
     T config;
     try {
       config = configClass.newInstance();
       if (ConfigType.MIN.equals(type)) {
-        setDefaultMinSettings((HudConfig)config);
+        setDefaultMinSettings((HudConfig) config);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -54,7 +65,7 @@ public class ConfigLoader {
     }
 
     config.update();
-    return config;
+    updateHandlers.get(type).accept(config);
   }
 
   public static <T extends IConfig> void save(T config, ConfigType type) {
