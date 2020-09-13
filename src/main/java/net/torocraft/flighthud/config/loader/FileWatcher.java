@@ -1,4 +1,4 @@
-package net.torocraft.flighthud.config;
+package net.torocraft.flighthud.config.loader;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;

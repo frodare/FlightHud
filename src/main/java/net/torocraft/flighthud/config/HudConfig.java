@@ -1,6 +1,7 @@
 package net.torocraft.flighthud.config;
 
 import java.awt.Color;
+import net.torocraft.flighthud.config.loader.IConfig;
 
 public class HudConfig implements IConfig {
   public transient int color = Color.GREEN.getRGB();
@@ -79,5 +80,10 @@ public class HudConfig implements IConfig {
     this.elytra_showHealth = false;
     this.flightPath_show = false;
     this.altitude_showHeight = false;
+  }
+
+  @Override
+  public boolean shouldWatch() {
+    return watchForConfigChanges;
   }
 }

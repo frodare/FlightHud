@@ -9,7 +9,7 @@ import net.torocraft.flighthud.components.HeadingIndicator;
 import net.torocraft.flighthud.components.LocationIndicator;
 import net.torocraft.flighthud.components.PitchIndicator;
 import net.torocraft.flighthud.components.SpeedIndicator;
-import net.torocraft.flighthud.config.SwitchDisplayModeCommand.DisplayMode;
+import net.torocraft.flighthud.config.SettingsConfig.DisplayMode;
 
 public class HudRenderer extends HudComponent {
 

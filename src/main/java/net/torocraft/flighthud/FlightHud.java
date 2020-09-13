@@ -7,11 +7,10 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.server.command.CommandManager;
-import net.torocraft.flighthud.config.ConfigLoader;
-import net.torocraft.flighthud.config.ConfigLoader.ConfigType;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
-import net.torocraft.flighthud.config.SwitchDisplayModeCommand;
+import net.torocraft.flighthud.config.loader.ConfigLoader;
+import net.torocraft.flighthud.config.loader.FabricConfigLoader;
 import org.lwjgl.glfw.GLFW;
 
 public class FlightHud implements ModInitializer {
@@ -20,27 +19,33 @@ public class FlightHud implements ModInitializer {
   public static SettingsConfig CONFIG_SETTINGS = new SettingsConfig();
   public static HudConfig CONFIG_MIN = new HudConfig();
   public static HudConfig CONFIG_FULL = new HudConfig();
+  
+  public static ConfigLoader<SettingsConfig> CONFIG_LOADER_SETTINGS = new FabricConfigLoader<>(
+    SettingsConfig.class, 
+    FlightHud.MODID + ".settings.json", 
+    config -> FlightHud.CONFIG_SETTINGS = config);
+    
+
+  public static ConfigLoader<HudConfig> CONFIG_LOADER_FULL = new FabricConfigLoader<>(
+    HudConfig.class, 
+    FlightHud.MODID + ".full.json", 
+    config -> FlightHud.CONFIG_FULL = config);
+  
+
+  public static ConfigLoader<HudConfig> CONFIG_LOADER_MIN = new FabricConfigLoader<>(
+    HudConfig.class, 
+    FlightHud.MODID + ".min.json", 
+    config -> FlightHud.CONFIG_MIN = config);
 
   private static KeyBinding keyBinding;
 
   @Override
   public void onInitialize() {
-    loadConfig();
+    CONFIG_LOADER_SETTINGS.load();
+    CONFIG_LOADER_FULL.load();
+    CONFIG_LOADER_MIN.load();
     setupKeycCode();
     setupCommand();
-  }
-
-  private static void loadConfig() {
-    ConfigLoader.load();
-    if (CONFIG_FULL.watchForConfigChanges) {
-      ConfigLoader.watch(ConfigType.FULL, HudConfig.class);
-    }
-    if (CONFIG_MIN.watchForConfigChanges) {
-      ConfigLoader.watch(ConfigType.MIN, HudConfig.class);
-    }
-    if (CONFIG_SETTINGS.watchForConfigChanges) {
-      ConfigLoader.watch(ConfigType.SETTINGS, SettingsConfig.class);
-    }
   }
 
   private static void setupKeycCode() {
@@ -51,8 +56,8 @@ public class FlightHud implements ModInitializer {
 
     ClientTickEvents.END_CLIENT_TICK.register(client -> {
       while (keyBinding.wasPressed()) {
-        SwitchDisplayModeCommand.toggle();
-      } ;
+        CONFIG_SETTINGS.toggleDisplayMode();
+      }
     });
   }
 
