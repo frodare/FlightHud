@@ -48,7 +48,8 @@ public class ConfigLoader {
     try {
       config = configClass.newInstance();
       if (ConfigType.MIN.equals(type)) {
-        setDefaultMinSettings((HudConfig) config);
+        //setDefaultMinSettings((HudConfig) config);
+        ((HudConfig) config).setDefaultMinSettings();
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -97,16 +98,4 @@ public class ConfigLoader {
     return file;
   }
 
-  private static void setDefaultMinSettings(HudConfig config) {
-    config.altitude_showScale = false;
-    config.speed_showScale = false;
-    config.heading_showScale = false;
-    config.altitude_showGroundInfo = false;
-    config.pitchLadder_showLadder = false;
-    config.pitchLadder_optimumClimbAngle = 0;
-    config.pitchLadder_optimumGlideAngle = 0;
-    config.elytra_showHealth = false;
-    config.flightPath_show = false;
-    config.altitude_showHeight = false;
-  }
 }

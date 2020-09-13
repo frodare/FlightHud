@@ -68,4 +68,16 @@ public class HudConfig implements IConfig {
     }
   }
 
+  public void setDefaultMinSettings() {
+    this.altitude_showScale = false;
+    this.speed_showScale = false;
+    this.heading_showScale = false;
+    this.altitude_showGroundInfo = false;
+    this.pitchLadder_showLadder = false;
+    this.pitchLadder_optimumClimbAngle = 0;
+    this.pitchLadder_optimumGlideAngle = 0;
+    this.elytra_showHealth = false;
+    this.flightPath_show = false;
+    this.altitude_showHeight = false;
+  }
 }
