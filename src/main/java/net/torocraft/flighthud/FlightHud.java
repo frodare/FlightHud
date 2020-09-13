@@ -10,7 +10,6 @@ import net.minecraft.server.command.CommandManager;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
 import net.torocraft.flighthud.config.loader.ConfigLoader;
-import net.torocraft.flighthud.config.loader.FabricConfigLoader;
 import org.lwjgl.glfw.GLFW;
 
 public class FlightHud implements ModInitializer {
@@ -20,20 +19,20 @@ public class FlightHud implements ModInitializer {
   public static HudConfig CONFIG_MIN = new HudConfig();
   public static HudConfig CONFIG_FULL = new HudConfig();
   
-  public static ConfigLoader<SettingsConfig> CONFIG_LOADER_SETTINGS = new FabricConfigLoader<>(
-    SettingsConfig.class, 
+  public static ConfigLoader<SettingsConfig> CONFIG_LOADER_SETTINGS = new ConfigLoader<>(
+    new SettingsConfig(), 
     FlightHud.MODID + ".settings.json", 
     config -> FlightHud.CONFIG_SETTINGS = config);
     
 
-  public static ConfigLoader<HudConfig> CONFIG_LOADER_FULL = new FabricConfigLoader<>(
-    HudConfig.class, 
+  public static ConfigLoader<HudConfig> CONFIG_LOADER_FULL = new ConfigLoader<>(
+    new HudConfig(), 
     FlightHud.MODID + ".full.json", 
     config -> FlightHud.CONFIG_FULL = config);
   
 
-  public static ConfigLoader<HudConfig> CONFIG_LOADER_MIN = new FabricConfigLoader<>(
-    HudConfig.class, 
+  public static ConfigLoader<HudConfig> CONFIG_LOADER_MIN = new ConfigLoader<>(
+    HudConfig.getDefaultMinSettings(), 
     FlightHud.MODID + ".min.json", 
     config -> FlightHud.CONFIG_MIN = config);
 

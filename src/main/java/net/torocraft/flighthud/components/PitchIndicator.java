@@ -30,9 +30,11 @@ public class PitchIndicator extends HudComponent {
     drawReferenceMark(mc, m, yHorizon, CONFIG.pitchLadder_optimumClimbAngle);
     drawReferenceMark(mc, m, yHorizon, CONFIG.pitchLadder_optimumGlideAngle);
     
-    pitchData.l1 -= pitchData.margin;
-    pitchData.r2 += pitchData.margin;
-    drawDegreeBar(mc, m, 0, yHorizon);
+    if (CONFIG.pitchLadder_showHorizon) {
+      pitchData.l1 -= pitchData.margin;
+      pitchData.r2 += pitchData.margin;
+      drawDegreeBar(mc, m, 0, yHorizon);
+    }
 
   }
 

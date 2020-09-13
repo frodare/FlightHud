@@ -31,6 +31,7 @@ public class HudConfig implements IConfig {
   public boolean flightPath_show = true;
 
   public int pitchLadder_degreesPerBar = 20;
+  public boolean pitchLadder_showHorizon = true;
   public boolean pitchLadder_showLadder = true;
   public float pitchLadder_optimumGlideAngle = -2;
   public float pitchLadder_optimumClimbAngle = 55;
@@ -69,17 +70,20 @@ public class HudConfig implements IConfig {
     }
   }
 
-  public void setDefaultMinSettings() {
-    this.altitude_showScale = false;
-    this.speed_showScale = false;
-    this.heading_showScale = false;
-    this.altitude_showGroundInfo = false;
-    this.pitchLadder_showLadder = false;
-    this.pitchLadder_optimumClimbAngle = 0;
-    this.pitchLadder_optimumGlideAngle = 0;
-    this.elytra_showHealth = false;
-    this.flightPath_show = false;
-    this.altitude_showHeight = false;
+  public static HudConfig getDefaultMinSettings() {
+    HudConfig config = new HudConfig();
+    config.altitude_showScale = false;
+    config.speed_showScale = false;
+    config.heading_showScale = false;
+    config.altitude_showGroundInfo = false;
+    config.pitchLadder_showLadder = false;
+    config.pitchLadder_optimumClimbAngle = 0;
+    config.pitchLadder_optimumGlideAngle = 0;
+    config.elytra_showHealth = false;
+    config.flightPath_show = false;
+    config.altitude_showHeight = false;
+    config.pitchLadder_showHorizon = false;
+    return config;
   }
 
   @Override

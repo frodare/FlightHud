@@ -7,23 +7,24 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.function.Consumer;
 
-public abstract class ConfigLoader<T extends IConfig> {
+public class ConfigLoader<T extends IConfig> {
 
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-  private final Class<T> configClass;
+  //private final Class<T> configClass;
   private final Consumer<T> onLoad;
   private final File file;
+  private final T defaultConfig;
   private FileWatcher watcher;
 
-  public ConfigLoader(Class<T> configClass, String filename, Consumer<T> onLoad) {
-    this.configClass = configClass;
+  public ConfigLoader(T defaultConfig, String filename, Consumer<T> onLoad) {
+    this.defaultConfig = defaultConfig;
     this.onLoad = onLoad;
-    this.file = new File(getConfigFolder(), filename);
+    this.file = new File(ConfigFolder.get(), filename);
   }
 
   public void load() {
-    T config = createEmptyInstance();
+    T config = defaultConfig;
 
     if (!file.exists()) {
       save(config);
@@ -38,22 +39,13 @@ public abstract class ConfigLoader<T extends IConfig> {
     }
   }
 
-  private T createEmptyInstance() {
-    try {
-      return configClass.getDeclaredConstructor().newInstance();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  protected abstract File getConfigFolder();
-
+  @SuppressWarnings("unchecked")
   public T read() {
     try (FileReader reader = new FileReader(file)) {
-      return GSON.fromJson(reader, configClass);
+      return (T) GSON.fromJson(reader, defaultConfig.getClass());
     } catch (Exception e) {
       e.printStackTrace();
-      return createEmptyInstance();
+      return defaultConfig;
     }
   }
 
