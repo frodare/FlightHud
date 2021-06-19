@@ -5,10 +5,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Shader;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Matrix4f;
 import net.torocraft.flighthud.config.HudConfig;
 
@@ -25,7 +28,7 @@ public abstract class HudComponent extends DrawableHelper {
   protected void drawPointer(MatrixStack m, float x, float y, float rot) {
     m.push();
     m.translate(x, y, 0);
-    m.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(rot + 45));
+    m.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rot + 45));
     drawVerticalLine(m, 0, 0, 5, CONFIG.color);
     drawHorizontalLine(m, 0, 5, 0, CONFIG.color);
     m.pop();
@@ -122,6 +125,7 @@ public abstract class HudComponent extends DrawableHelper {
       y2 = j;
     }
     int color = CONFIG.color;
+    // color == java.awt.Color.GREEN.getRGB();
     float alpha = (float) (color >> 24 & 255) / 255.0F;
     float r = (float) (color >> 16 & 255) / 255.0F;
     float g = (float) (color >> 8 & 255) / 255.0F;
@@ -130,7 +134,8 @@ public abstract class HudComponent extends DrawableHelper {
     RenderSystem.enableBlend();
     RenderSystem.disableTexture();
     RenderSystem.defaultBlendFunc();
-    bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+    RenderSystem.setShader(GameRenderer::getPositionColorShader);
+    bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
     bufferBuilder.vertex(matrix, x1, y2, 0.0F).color(r, g, b, alpha).next();
     bufferBuilder.vertex(matrix, x2, y2, 0.0F).color(r, g, b, alpha).next();
     bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(r, g, b, alpha).next();

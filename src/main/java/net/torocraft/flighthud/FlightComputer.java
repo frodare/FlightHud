@@ -104,7 +104,7 @@ public class FlightComputer {
   }
 
   private static float computeHeading(MinecraftClient client) {
-    return toHeading(client.player.yaw);
+    return toHeading(client.player.getYaw());
   }
 
   private static float computeSpeed(MinecraftClient client) {
