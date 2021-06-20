@@ -125,7 +125,6 @@ public abstract class HudComponent extends DrawableHelper {
       y2 = j;
     }
     int color = CONFIG.color;
-    // color == java.awt.Color.GREEN.getRGB();
     float alpha = (float) (color >> 24 & 255) / 255.0F;
     float r = (float) (color >> 16 & 255) / 255.0F;
     float g = (float) (color >> 8 & 255) / 255.0F;
