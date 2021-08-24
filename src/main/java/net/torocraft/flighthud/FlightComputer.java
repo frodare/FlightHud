@@ -2,6 +2,7 @@ package net.torocraft.flighthud;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -108,7 +109,20 @@ public class FlightComputer {
   }
 
   private static float computeSpeed(MinecraftClient client) {
-    return (float) client.player.getVelocity().length() * TICKS_PER_SECOND;
+    float speed = 0;
+    var p = client.player;
+    
+    if(p.hasVehicle())
+    {
+      Entity entity = p.getVehicle();
+      speed = (float) entity.getVelocity().length() * TICKS_PER_SECOND;
+    }
+    else
+    {
+      speed = (float) client.player.getVelocity().length() * TICKS_PER_SECOND;
+    }
+
+    return speed;
   }
 
   private static float toHeading(float yawDegrees) {
