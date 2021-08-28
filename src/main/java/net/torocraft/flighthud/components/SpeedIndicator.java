@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -16,34 +16,39 @@ public class SpeedIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, Minecraft mc) {
-    int top = dim.tFrame;
-    int bottom = dim.bFrame;
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+    float top = dim.tFrame;
+    float bottom = dim.bFrame;
 
-    int left = dim.lFrame - 2;
-    int right = dim.lFrame;
-    double unitPerPixel = 30;
+    float left = dim.lFrame - 2;
+    float right = dim.lFrame;
+    float unitPerPixel = 30;
 
-    int floorOffset = i(computer.speed * unitPerPixel);
-    int yFloor = dim.yMid - floorOffset;
+    float floorOffset = computer.speed * unitPerPixel;
+    float yFloor = dim.yMid - floorOffset;
 
-    int xSpeedText = left - 5;
-    drawRightAlignedFont(mc, m, String.format("%.2f", computer.speed), xSpeedText, dim.yMid - 3);
-    drawBox(m, xSpeedText - 30, dim.yMid - 5, 30, 10);
+    float xSpeedText = left - 5;
 
-    for (double i = 0; i <= 100; i = i + 0.25) {
+    if (CONFIG.speed_showReadout) {
+      drawRightAlignedFont(mc, m, String.format("%.2f", computer.speed), xSpeedText, dim.yMid - 3);
+      drawBox(m, xSpeedText - 29.5f, dim.yMid - 4.5f, 30, 10);
+    }
 
-      int y = i(dim.hScreen - i * unitPerPixel) - yFloor;
-      if (y < top || y > (bottom - 5))
-        continue;
 
-      if (i % 1 == 0) {
-        drawHorizontalLine(m, left - 2, right, y, COLOR);
-        if (y > dim.yMid + 7 || y < dim.yMid - 7) {
-          drawRightAlignedFont(mc, m, String.format("%.0f", i), xSpeedText, y - 3);
+    if (CONFIG.speed_showScale) {
+      for (float i = 0; i <= 100; i = i + 0.25f) {
+        float y = dim.hScreen - i * unitPerPixel - yFloor;
+        if (y < top || y > (bottom - 5))
+          continue;
+
+        if (i % 1 == 0) {
+          drawHorizontalLine(m, left - 2, right, y);
+          if (!CONFIG.speed_showReadout || y > dim.yMid + 7 || y < dim.yMid - 7) {
+            drawRightAlignedFont(mc, m, String.format("%.0f", i), xSpeedText, y - 3);
+          }
         }
+        drawHorizontalLine(m, left, right, y);
       }
-      drawHorizontalLine(m, left, right, y, COLOR);
     }
   }
 }

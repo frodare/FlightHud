@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -17,41 +17,41 @@ public class HeadingIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, Minecraft mc) {
-    int left = dim.lFrame;
-    int right = dim.rFrame;
-    int top = dim.tFrame - 10;
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+    float left = dim.lFrame;
+    float right = dim.rFrame;
+    float top = dim.tFrame - 10;
 
+    float yText = top - 7;
+    float northOffset = computer.heading * dim.degreesPerPixel;
+    float xNorth = dim.xMid - northOffset;
 
-    int yText = top - 7;
+    if (CONFIG.heading_showReadout) {
+      drawFont(mc, m, String.format("%03d", i(wrapHeading(computer.heading))), dim.xMid - 8, yText);
+      drawBox(m, dim.xMid - 15, yText - 1.5f, 30, 10);
+    }
+    
+    if (CONFIG.heading_showScale) {
+      drawPointer(m, dim.xMid, top + 10, 0);
+      for (int i = -540; i < 540; i = i + 5) {
+        float x = (i * dim.degreesPerPixel) + xNorth;
+        if (x < left || x > right)
+          continue;
 
-    int northOffset = i(computer.heading * dim.degreesPerPixel);
-    int xNorth = dim.xMid - northOffset;
+        if (i % 15 == 0) {
+          if (i % 90 == 0) {
+            drawFont(mc, m, headingToDirection(i), x - 2, yText + 10);
+            drawFont(mc, m, headingToAxis(i), x - 8, yText + 20);
+          } else {
+            drawVerticalLine(m, x, top + 3, top + 10);
+          }
 
-    drawPointer(m, dim.xMid, top + 10, 0);
-
-    drawFont(mc, m, String.format("%03d", i(wrapHeading(computer.heading))), dim.xMid - 8, yText);
-
-    drawBox(m, dim.xMid - 15, yText - 2, 30, 10);
-
-    for (int i = -540; i < 540; i = i + 5) {
-      int x = i(i * dim.degreesPerPixel) + xNorth;
-      if (x < left || x > right)
-        continue;
-
-      if (i % 15 == 0) {
-        if (i % 90 == 0) {
-          drawFont(mc, m, headingToDirection(i), x - 2, yText + 10);
-          drawFont(mc, m, headingToAxis(i), x - 8, yText + 20);
+          if (!CONFIG.heading_showReadout || x <= dim.xMid - 26 || x >= dim.xMid + 26) {
+            drawFont(mc, m, String.format("%03d", i(wrapHeading(i))), x - 8, yText);
+          }
         } else {
-          drawVerticalLine(m, x, top + 3, top + 10, COLOR);
+          drawVerticalLine(m, x, top + 6, top + 10);
         }
-
-        if (x <= dim.xMid - 26 || x >= dim.xMid + 26) {
-          drawFont(mc, m, String.format("%03d", i(wrapHeading(i))), x - 8, yText);
-        }
-      } else {
-        drawVerticalLine(m, x, top + 6, top + 10, COLOR);
       }
     }
   }

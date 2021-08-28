@@ -1,46 +1,48 @@
 package net.torocraft.flighthud;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.torocraft.flighthud.config.HudConfig;
 
 public class Dimensions {
 
-  public static final double FRAME_RATIO = 0.6d;
+  public float hScreen;
+  public float wScreen;
+  public float degreesPerPixel;
+  public float xMid;
+  public float yMid;
 
-  public int hScreen;
-  public int wScreen;
-  public double degreesPerPixel;
-  public int xMid;
-  public int yMid;
+  public float wFrame;
+  public float hFrame;
+  public float lFrame;
+  public float rFrame;
+  public float tFrame;
+  public float bFrame;
 
-  public int wFrame;
-  public int hFrame;
-  public int lFrame;
-  public int rFrame;
-  public int tFrame;
-  public int bFrame;
+  public void update(MinecraftClient client) {
+    if (HudComponent.CONFIG == null) {
+      return;
+    }
+    HudConfig c = HudComponent.CONFIG;
+    hScreen = client.getWindow().getScaledHeight();
+    wScreen = client.getWindow().getScaledWidth();
 
-  @Deprecated
-  public int margin;
+    if (c.scale != 1d && c.scale > 0) {
+      hScreen = hScreen * c.scale;
+      wScreen = wScreen * c.scale;
+    }
 
-  public void update(Minecraft client) {
-    hScreen = client.getMainWindow().getScaledHeight();
-    wScreen = client.getMainWindow().getScaledWidth();
-    degreesPerPixel = i(hScreen / client.gameSettings.fov);
-    xMid = i(wScreen / 2);
-    yMid = i(hScreen / 2);
-    margin = i(wScreen * 0.1d);
+    degreesPerPixel = (float) (hScreen / client.options.fov);
+    xMid = wScreen / 2;
+    yMid = hScreen / 2;
 
-    wFrame = i(wScreen * FRAME_RATIO);
-    hFrame = i(hScreen * FRAME_RATIO);
+    wFrame = wScreen * c.width;
+    hFrame = hScreen * c.height;
 
-    lFrame = i(((double)wScreen - (double)wFrame) / 2);
+    lFrame = ((wScreen - wFrame) / 2) + c.xOffset;
     rFrame = lFrame + wFrame;
 
-    tFrame = i(((double)hScreen - (double)hFrame) / 2);
+    tFrame = ((hScreen - hFrame) / 2) + c.yOffset;
     bFrame = tFrame + hFrame;
   }
 
-  private int i(double d) {
-    return (int) Math.round(d);
-  }
 }

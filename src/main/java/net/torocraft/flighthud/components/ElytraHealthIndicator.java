@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -17,14 +17,15 @@ public class ElytraHealthIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, Minecraft mc) {
-    if (computer.elytraHealth == null) {
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+    if (!CONFIG.elytra_showHealth || computer.elytraHealth == null) {
       return;
     }
-    int x = dim.xMid;
-    int y = dim.bFrame + 3;
 
-    drawBox(m, x - 4, y - 2, 30, 10);
+    float x = dim.wScreen * CONFIG.elytra_x;
+    float y = dim.hScreen * CONFIG.elytra_y;
+
+    drawBox(m, x - 3.5f, y - 1.5f, 30, 10);
     drawFont(mc, m, "E", x - 10, y);
     drawFont(mc, m, String.format("%d", i(computer.elytraHealth)) + "%", x, y);
   }

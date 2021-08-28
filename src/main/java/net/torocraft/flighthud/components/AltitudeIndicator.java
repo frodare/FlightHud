@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -16,65 +16,70 @@ public class AltitudeIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, Minecraft mc) {
-    int top = dim.tFrame;
-    int bottom = dim.bFrame;
+  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+    float top = dim.tFrame;
+    float bottom = dim.bFrame;
 
-    int right = dim.rFrame + 2;
-    int left = dim.rFrame;
+    float right = dim.rFrame + 2;
+    float left = dim.rFrame;
 
-    int blocksPerPixel = 1;
+    float blocksPerPixel = 1;
 
-    int floorOffset = i(computer.altitude * blocksPerPixel);
-    int yFloor = dim.yMid - floorOffset;
-    int xAltText = right + 5;
+    float floorOffset = i(computer.altitude * blocksPerPixel);
+    float yFloor = dim.yMid - floorOffset;
+    float xAltText = right + 5;
 
-    drawHeightIndicator(mc, m, left - 1, dim.yMid, bottom - dim.yMid);
+    if (CONFIG.altitude_showGroundInfo) {
+      drawHeightIndicator(mc, m, left - 1, dim.yMid, bottom - dim.yMid);
+    }
 
-    drawFont(mc, m, String.format("%.0f", computer.altitude), xAltText, dim.yMid - 3);
-    drawBox(m, xAltText - 3, dim.yMid - 5, 25, 10);
+    if (CONFIG.altitude_showReadout) {
+      drawFont(mc, m, String.format("%.0f", computer.altitude), xAltText, dim.yMid - 3);
+      drawBox(m, xAltText - 2, dim.yMid - 4.5f, 28, 10);
+    }
 
-    drawFont(mc, m, "G", xAltText - 10, bottom + 3);
-    String heightText = computer.distanceFromGround == null ? "??"
-        : String.format("%d", i(computer.distanceFromGround));
-    drawFont(mc, m, heightText, xAltText, bottom + 3);
-    drawBox(m, xAltText - 3, bottom + 1, 25, 10);
+    if (CONFIG.altitude_showHeight) {
+      drawFont(mc, m, "G", xAltText - 10, bottom + 3);
+      String heightText = computer.distanceFromGround == null ? "??"
+          : String.format("%d", i(computer.distanceFromGround));
+      drawFont(mc, m, heightText, xAltText, bottom + 3);
+      drawBox(m, xAltText - 2, bottom + 1.5f, 28, 10);
+    }
 
-    for (int i = 0; i < 1000; i = i + 10) {
+    if (CONFIG.altitude_showScale) {
+      for (int i = 0; i < 1000; i = i + 10) {
 
-      int y = (dim.hScreen - i * blocksPerPixel) - yFloor;
-      if (y < top || y > (bottom - 5))
-        continue;
+        float y = (dim.hScreen - i * blocksPerPixel) - yFloor;
+        if (y < top || y > (bottom - 5))
+          continue;
 
-      int color = COLOR;
-
-      if (i % 50 == 0) {
-        drawHorizontalLine(m, left, right + 2, y, color);
-        if (y > dim.yMid + 7 || y < dim.yMid - 7) {
-          drawFont(mc, m, String.format("%d", i), xAltText, y - 3);
+        if (i % 50 == 0) {
+          drawHorizontalLine(m, left, right + 2, y);
+          if (!CONFIG.altitude_showReadout || y > dim.yMid + 7 || y < dim.yMid - 7) {
+            drawFont(mc, m, String.format("%d", i), xAltText, y - 3);
+          }
         }
+        drawHorizontalLine(m, left, right, y);
       }
-      drawHorizontalLine(m, left, right, y, color);
     }
   }
 
-  private void drawHeightIndicator(Minecraft client, MatrixStack m, int x, int top, int h) {
-    int bottom = top + h;
-    double blocksPerPixel = (double) h / (double) (client.world.getHeight() + 64);
-    int yAlt = bottom - i((computer.altitude + 64) * blocksPerPixel);
-    int yFloor = bottom - i(64 * blocksPerPixel);
+  private void drawHeightIndicator(MinecraftClient client, MatrixStack m, float x, float top, float h) {
+    float bottom = top + h;
+    float blocksPerPixel =  h / (client.world.getHeight() + 64f);
+    float yAlt = bottom - i((computer.altitude + 64) * blocksPerPixel);
+    float yFloor = bottom - i(64 * blocksPerPixel);
 
-    drawVerticalLine(m, x, top - 1, bottom + 1, COLOR);
+    drawVerticalLine(m, x, top - 1, bottom + 1);
 
     if (computer.groundLevel != null) {
-      int yGroundLevel = bottom - i((computer.groundLevel + 64) * blocksPerPixel);
-      // func_238467_a_() = fill()
-      func_238467_a_(m, x - 3, yGroundLevel + 2, x, yFloor, COLOR);
+      float yGroundLevel = bottom - (computer.groundLevel + 64f) * blocksPerPixel;
+      fill(m, x - 3, yGroundLevel + 2, x, yFloor);
     }
 
-    drawHorizontalLine(m, x - 6, x - 1, top, COLOR);
-    drawHorizontalLine(m, x - 6, x - 1, yFloor, COLOR);
-    drawHorizontalLine(m, x - 6, x - 1, bottom, COLOR);
+    drawHorizontalLine(m, x - 6, x - 1, top);
+    drawHorizontalLine(m, x - 6, x - 1, yFloor);
+    drawHorizontalLine(m, x - 6, x - 1, bottom);
 
     drawPointer(m, x, yAlt, 90);
   }
