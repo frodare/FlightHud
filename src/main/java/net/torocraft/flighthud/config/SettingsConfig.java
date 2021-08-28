@@ -1,6 +1,6 @@
 package net.torocraft.flighthud.config;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.torocraft.flighthud.FlightHud;
 import net.torocraft.flighthud.config.loader.IConfig;
 
@@ -30,7 +30,7 @@ public class SettingsConfig implements IConfig {
   }
 
   public void toggleDisplayMode() {
-    MinecraftClient client = MinecraftClient.getInstance();
+    Minecraft client = Minecraft.getInstance();
     
     if (client.player.isFallFlying()) {
       displayModeWhenFlying = toggle(displayModeWhenFlying);

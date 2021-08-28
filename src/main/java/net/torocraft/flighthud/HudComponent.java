@@ -1,23 +1,23 @@
 package net.torocraft.flighthud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Shader;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Matrix4f;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.phys.Vec3;
 import net.torocraft.flighthud.config.HudConfig;
 
-public abstract class HudComponent extends DrawableHelper {
+public abstract class HudComponent extends GuiComponent {
 
-  public abstract void render(MatrixStack m, float partial, MinecraftClient client);
+  public abstract void render(PoseStack m, float partial, Minecraft client);
 
   public static HudConfig CONFIG;
 
@@ -25,13 +25,13 @@ public abstract class HudComponent extends DrawableHelper {
     return (int) Math.round(d);
   }
 
-  protected void drawPointer(MatrixStack m, float x, float y, float rot) {
-    m.push();
+  protected void drawPointer(PoseStack m, float x, float y, float rot) {
+    m.pushPose();
     m.translate(x, y, 0);
-    m.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rot + 45));
-    drawVerticalLine(m, 0, 0, 5, CONFIG.color);
-    drawHorizontalLine(m, 0, 5, 0, CONFIG.color);
-    m.pop();
+    m.mulPose(Vector3f.ZP.rotationDegrees(rot + 45));
+    vLine(m, 0, 0, 5, CONFIG.color);
+    hLine(m, 0, 5, 0, CONFIG.color);
+    m.popPose();
   }
 
   protected float wrapHeading(float degrees) {
@@ -42,29 +42,29 @@ public abstract class HudComponent extends DrawableHelper {
     return degrees;
   }
 
-  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y) {
+  protected void drawFont(Minecraft mc, PoseStack m, String s, float x, float y) {
     drawFont(mc, m, s, x, y, CONFIG.color);
   }
 
-  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y,
+  protected void drawFont(Minecraft mc, PoseStack m, String s, float x, float y,
       int color) {
-    mc.textRenderer.draw(m, s, x, y, CONFIG.color);
+    mc.font.draw(m, s, x, y, CONFIG.color);
   }
 
-  protected void drawRightAlignedFont(MinecraftClient mc, MatrixStack m, String s, float x,
+  protected void drawRightAlignedFont(Minecraft mc, PoseStack m, String s, float x,
       float y) {
-    int w = mc.textRenderer.getWidth(s);
+    int w = mc.font.width(s);
     drawFont(mc, m, s, x - w, y);
   }
 
-  protected void drawBox(MatrixStack m, float x, float y, float w, float h) {
+  protected void drawBox(PoseStack m, float x, float y, float w, float h) {
     drawHorizontalLine(m, x, x + w, y);
     drawHorizontalLine(m, x, x + w, y + h);
     drawVerticalLine(m, x, y, y + h);
     drawVerticalLine(m, x + w, y, y + h);
   }
 
-  protected void drawHorizontalLineDashed(MatrixStack m, float x1, float x2, float y,
+  protected void drawHorizontalLineDashed(PoseStack m, float x1, float x2, float y,
       int dashCount) {
     float width = x2 - x1;
     int segmentCount = dashCount * 2 - 1;
@@ -84,7 +84,7 @@ public abstract class HudComponent extends DrawableHelper {
     }
   }
 
-  protected void drawHorizontalLine(MatrixStack matrices, float x1, float x2, float y) {
+  protected void drawHorizontalLine(PoseStack matrices, float x1, float x2, float y) {
     if (x2 < x1) {
       float i = x1;
       x1 = x2;
@@ -94,7 +94,7 @@ public abstract class HudComponent extends DrawableHelper {
         y + CONFIG.halfThickness);
   }
 
-  protected void drawVerticalLine(MatrixStack matrices, float x, float y1, float y2) {
+  protected void drawVerticalLine(PoseStack matrices, float x, float y1, float y2) {
     if (y2 < y1) {
       float i = y1;
       y1 = y2;
@@ -106,8 +106,8 @@ public abstract class HudComponent extends DrawableHelper {
   }
 
 
-  public static void fill(MatrixStack matrices, float x1, float y1, float x2, float y2) {
-    fill(matrices.peek().getModel(), x1, y1, x2, y2);
+  public static void fill(PoseStack matrices, float x1, float y1, float x2, float y2) {
+    fill(matrices.last().pose(), x1, y1, x2, y2);
   }
 
   private static void fill(Matrix4f matrix, float x1, float y1, float x2, float y2) {
@@ -129,18 +129,18 @@ public abstract class HudComponent extends DrawableHelper {
     float r = (float) (color >> 16 & 255) / 255.0F;
     float g = (float) (color >> 8 & 255) / 255.0F;
     float b = (float) (color & 255) / 255.0F;
-    BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+    BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
     RenderSystem.enableBlend();
     RenderSystem.disableTexture();
     RenderSystem.defaultBlendFunc();
     RenderSystem.setShader(GameRenderer::getPositionColorShader);
-    bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-    bufferBuilder.vertex(matrix, x1, y2, 0.0F).color(r, g, b, alpha).next();
-    bufferBuilder.vertex(matrix, x2, y2, 0.0F).color(r, g, b, alpha).next();
-    bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(r, g, b, alpha).next();
-    bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(r, g, b, alpha).next();
+    bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+    bufferBuilder.vertex(matrix, x1, y2, 0.0F).color(r, g, b, alpha).endVertex();
+    bufferBuilder.vertex(matrix, x2, y2, 0.0F).color(r, g, b, alpha).endVertex();
+    bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(r, g, b, alpha).endVertex();
+    bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(r, g, b, alpha).endVertex();
     bufferBuilder.end();
-    BufferRenderer.draw(bufferBuilder);
+    BufferUploader.end(bufferBuilder);
     RenderSystem.enableTexture();
     RenderSystem.disableBlend();
   }

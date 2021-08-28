@@ -1,22 +1,22 @@
 package net.torocraft.flighthud;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class FlightComputer {
   private static final float TICKS_PER_SECOND = 20;
 
-  public Vec3d velocity;
+  public Vec3 velocity;
   public float speed;
   public float pitch;
   public float heading;
-  public Vec3d flightPath;
+  public Vec3 flightPath;
   public float flightPitch;
   public float flightHeading;
   public float roll;
@@ -25,8 +25,8 @@ public class FlightComputer {
   public Float distanceFromGround;
   public Float elytraHealth;
 
-  public void update(MinecraftClient client, float partial) {
-    velocity = client.player.getVelocity();
+  public void update(Minecraft client, float partial) {
+    velocity = client.player.getDeltaMovement();
     pitch = computePitch(client, partial);
     speed = computeSpeed(client);
     roll = computeRoll(client);
@@ -39,48 +39,48 @@ public class FlightComputer {
     elytraHealth = computeElytraHealth(client);
   }
 
-  private Float computeElytraHealth(MinecraftClient client) {
-    ItemStack stack = client.player.getEquippedStack(EquipmentSlot.CHEST);
+  private Float computeElytraHealth(Minecraft client) {
+    ItemStack stack = client.player.getItemBySlot(EquipmentSlot.CHEST);
     if (stack != null && stack.getItem() == Items.ELYTRA) {
       float remain =
-          ((float) stack.getMaxDamage() - (float) stack.getDamage()) / (float) stack.getMaxDamage();
+          ((float) stack.getMaxDamage() - (float) stack.getDamageValue()) / (float) stack.getMaxDamage();
       return remain * 100f;
     }
     return null;
   }
 
-  private static float computeFlightPitch(Vec3d velocity, float pitch) {
+  private static float computeFlightPitch(Vec3 velocity, float pitch) {
     if (velocity.length() < 0.01) {
       return pitch;
     }
-    Vec3d n = velocity.normalize();
+    Vec3 n = velocity.normalize();
     return (float) (90 - Math.toDegrees(Math.acos(n.y)));
   }
 
-  private static float computeFlightHeading(Vec3d velocity, float heading) {
+  private static float computeFlightHeading(Vec3 velocity, float heading) {
     if (velocity.length() < 0.01) {
       return heading;
     }
     return toHeading((float) Math.toDegrees(-Math.atan2(velocity.x, velocity.z)));
   }
 
-  private static float computeRoll(MinecraftClient client) {
-    return (float) Math.toDegrees(client.player.elytraRoll);
+  private static float computeRoll(Minecraft client) {
+    return (float) Math.toDegrees(client.player.elytraRotZ);
   }
 
-  private static float computePitch(MinecraftClient client, float parital) {
-    return client.player.getPitch(parital) * -1;
+  private static float computePitch(Minecraft client, float parital) {
+    return client.player.getViewXRot(parital) * -1;
   }
 
-  private static boolean isGround(BlockPos pos, MinecraftClient client) {
-    BlockState block = client.world.getBlockState(pos);
+  private static boolean isGround(BlockPos pos, Minecraft client) {
+    BlockState block = client.level.getBlockState(pos);
     return !block.isAir();
   }
 
-  public static BlockPos findGround(MinecraftClient client) {
-    BlockPos pos = client.player.getBlockPos();
+  public static BlockPos findGround(Minecraft client) {
+    BlockPos pos = client.player.blockPosition();
     while (pos.getY() >= 0) {
-      pos = pos.down();
+      pos = pos.below();
       if (isGround(pos, client)) {
         return pos;
       }
@@ -88,12 +88,12 @@ public class FlightComputer {
     return null;
   }
 
-  private static Integer computeGroundLevel(MinecraftClient client) {
+  private static Integer computeGroundLevel(Minecraft client) {
     BlockPos ground = findGround(client);
     return ground == null ? null : ground.getY();
   }
 
-  private static Float computeDistanceFromGround(MinecraftClient client, float altitude,
+  private static Float computeDistanceFromGround(Minecraft client, float altitude,
       Integer groundLevel) {
     if (groundLevel == null) {
       return null;
@@ -101,22 +101,22 @@ public class FlightComputer {
     return Math.max(0f, altitude - groundLevel);
   }
 
-  private static float computeAltitude(MinecraftClient client) {
-    return (float) client.player.getPos().y - 1;
+  private static float computeAltitude(Minecraft client) {
+    return (float) client.player.position().y - 1;
   }
 
-  private static float computeHeading(MinecraftClient client) {
-    return toHeading(client.player.getYaw());
+  private static float computeHeading(Minecraft client) {
+    return toHeading(client.player.getYRot());
   }
 
-  private static float computeSpeed(MinecraftClient client) {
+  private static float computeSpeed(Minecraft client) {
     float speed = 0;
     var player = client.player;
-    if (player.hasVehicle()) {
+    if (player.isPassenger()) {
       Entity entity = player.getVehicle();
-      speed = (float) entity.getVelocity().length() * TICKS_PER_SECOND;
+      speed = (float) entity.getDeltaMovement().length() * TICKS_PER_SECOND;
     } else {
-      speed = (float) client.player.getVelocity().length() * TICKS_PER_SECOND;
+      speed = (float) client.player.getDeltaMovement().length() * TICKS_PER_SECOND;
     }
     return speed;
   }
