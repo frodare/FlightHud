@@ -42,7 +42,8 @@ public class FlightComputer {
   private Float computeElytraHealth(MinecraftClient client) {
     ItemStack stack = client.player.getEquippedStack(EquipmentSlot.CHEST);
     if (stack != null && stack.getItem() == Items.ELYTRA) {
-      float remain = ((float)stack.getMaxDamage() - (float)stack.getDamage()) / (float)stack.getMaxDamage();
+      float remain =
+          ((float) stack.getMaxDamage() - (float) stack.getDamage()) / (float) stack.getMaxDamage();
       return remain * 100f;
     }
     return null;
@@ -60,7 +61,7 @@ public class FlightComputer {
     if (velocity.length() < 0.01) {
       return heading;
     }
-    return toHeading((float)Math.toDegrees(-Math.atan2(velocity.x, velocity.z)));
+    return toHeading((float) Math.toDegrees(-Math.atan2(velocity.x, velocity.z)));
   }
 
   private static float computeRoll(MinecraftClient client) {
@@ -110,18 +111,13 @@ public class FlightComputer {
 
   private static float computeSpeed(MinecraftClient client) {
     float speed = 0;
-    var p = client.player;
-    
-    if(p.hasVehicle())
-    {
-      Entity entity = p.getVehicle();
+    var player = client.player;
+    if (player.hasVehicle()) {
+      Entity entity = player.getVehicle();
       speed = (float) entity.getVelocity().length() * TICKS_PER_SECOND;
-    }
-    else
-    {
+    } else {
       speed = (float) client.player.getVelocity().length() * TICKS_PER_SECOND;
     }
-
     return speed;
   }
 
