@@ -12,7 +12,6 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.phys.Vec3;
 import net.torocraft.flighthud.config.HudConfig;
 
 public abstract class HudComponent extends GuiComponent {

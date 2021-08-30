@@ -1,9 +1,6 @@
 package net.torocraft.flighthud;
 
-
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -13,7 +10,6 @@ import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
 import net.torocraft.flighthud.config.loader.ConfigLoader;
-import javax.swing.text.JTextComponent.KeyBinding;
 import org.lwjgl.glfw.GLFW;
 
 @Mod(FlightHud.MODID)
@@ -45,12 +41,12 @@ public class FlightHud {
 
   public FlightHud() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onKeyInput);
     MinecraftForge.EVENT_BUS.register(this);
-    // ToroHealthClient.init();
+    MinecraftForge.EVENT_BUS.addListener(this::onKeyInput);
   }
 
   private void setup(final FMLCommonSetupEvent event) {
+    keyBinding = new KeyMapping("key.flighthud.toggleDisplayModed", GLFW.GLFW_KEY_GRAVE_ACCENT, "category.flighthud.toggleDisplayMode");
     CONFIG_LOADER_SETTINGS.load();
     CONFIG_LOADER_FULL.load();
     CONFIG_LOADER_MIN.load();
@@ -65,7 +61,6 @@ public class FlightHud {
   }
 
   private static void setupKeycCode() {
-    KeyMapping keyBinding = new KeyMapping("key.flighthud.toggleDisplayModed", GLFW.GLFW_KEY_GRAVE_ACCENT, "category.flighthud.toggleDisplayMode");
     ClientRegistry.registerKeyBinding(keyBinding);
   }
 
