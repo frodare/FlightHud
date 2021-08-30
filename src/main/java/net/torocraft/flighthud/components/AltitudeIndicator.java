@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -16,7 +16,7 @@ public class AltitudeIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+  public void render(PoseStack m, float partial, Minecraft mc) {
     float top = dim.tFrame;
     float bottom = dim.bFrame;
 
@@ -64,9 +64,9 @@ public class AltitudeIndicator extends HudComponent {
     }
   }
 
-  private void drawHeightIndicator(MinecraftClient client, MatrixStack m, float x, float top, float h) {
+  private void drawHeightIndicator(Minecraft client, PoseStack m, float x, float top, float h) {
     float bottom = top + h;
-    float blocksPerPixel =  h / (client.world.getHeight() + 64f);
+    float blocksPerPixel =  h / (client.level.getHeight() + 64f);
     float yAlt = bottom - i((computer.altitude + 64) * blocksPerPixel);
     float yFloor = bottom - i(64 * blocksPerPixel);
 

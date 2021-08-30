@@ -1,7 +1,7 @@
 package net.torocraft.flighthud.components;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -17,7 +17,7 @@ public class PitchIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+  public void render(PoseStack m, float partial, Minecraft mc) {
     pitchData.update(dim);
 
     float horizonOffset = computer.pitch * dim.degreesPerPixel;
@@ -38,7 +38,7 @@ public class PitchIndicator extends HudComponent {
 
   }
 
-  private void drawLadder(MinecraftClient mc, MatrixStack m, float yHorizon) {
+  private void drawLadder(Minecraft mc, PoseStack m, float yHorizon) {
     int degreesPerBar = CONFIG.pitchLadder_degreesPerBar;
 
     if (degreesPerBar < 1) {
@@ -53,7 +53,7 @@ public class PitchIndicator extends HudComponent {
 
   }
 
-  private void drawReferenceMark(MinecraftClient mc, MatrixStack m, float yHorizon, float degrees) {
+  private void drawReferenceMark(Minecraft mc, PoseStack m, float yHorizon, float degrees) {
     if (degrees == 0) {
       return;
     }
@@ -74,7 +74,7 @@ public class PitchIndicator extends HudComponent {
   }
 
 
-  private void drawDegreeBar(MinecraftClient mc, MatrixStack m, float degree, float y) {
+  private void drawDegreeBar(Minecraft mc, PoseStack m, float degree, float y) {
 
     if (y < dim.tFrame || y > dim.bFrame) {
       return;
