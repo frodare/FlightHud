@@ -60,6 +60,7 @@ public class HeadingIndicator extends HudComponent {
     degrees = i(wrapHeading(degrees));
     switch (degrees) {
       case 0:
+      case 360:
         return "N";
       case 90:
         return "E";
@@ -67,8 +68,6 @@ public class HeadingIndicator extends HudComponent {
         return "S";
       case 270:
         return "W";
-      case 360:
-        return "N";
       default:
         return "";
     }
@@ -78,6 +77,7 @@ public class HeadingIndicator extends HudComponent {
     degrees = i(wrapHeading(degrees));
     switch (degrees) {
       case 0:
+      case 360:
         return "-Z";
       case 90:
         return "+X";
@@ -85,8 +85,6 @@ public class HeadingIndicator extends HudComponent {
         return "+Z";
       case 270:
         return "-X";
-      case 360:
-        return "-Z";
       default:
         return "";
     }
