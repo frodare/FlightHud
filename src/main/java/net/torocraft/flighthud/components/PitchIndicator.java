@@ -117,7 +117,7 @@ public class PitchIndicator extends HudComponent {
       l1 = left + margin;
       l2 = mid - 7;
       sideWidth = l2 - l1;
-      r1 = mid + 7;
+      r1 = mid + 8;
       r2 = r1 + sideWidth;
     }
 
