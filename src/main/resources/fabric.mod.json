@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "flighthud",
   "version": "${version}",
-
   "name": "Flight HUD",
   "description": "Displays a flight styled hud while flying with elytra.",
   "authors": [
@@ -13,10 +12,8 @@
     "issues": "https://github.com/frodare/FlightHud/issues",
     "sources": "https://github.com/frodare/FlightHud"
   },
-
   "license": "GPL3",
   "icon": "assets/flighthud/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -26,7 +23,6 @@
   "mixins": [
     "flighthud.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",

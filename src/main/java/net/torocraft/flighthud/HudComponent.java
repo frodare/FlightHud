@@ -105,7 +105,6 @@ public abstract class HudComponent extends DrawableHelper {
         y2 - CONFIG.halfThickness);
   }
 
-
   public static void fill(MatrixStack matrices, float x1, float y1, float x2, float y2) {
     fill(matrices.peek().getPositionMatrix(), x1, y1, x2, y2);
   }

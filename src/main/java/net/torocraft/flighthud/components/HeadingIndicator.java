@@ -30,7 +30,7 @@ public class HeadingIndicator extends HudComponent {
       drawFont(mc, m, String.format("%03d", i(wrapHeading(computer.heading))), dim.xMid - 8, yText);
       drawBox(m, dim.xMid - 15, yText - 1.5f, 30, 10);
     }
-    
+
     if (CONFIG.heading_showScale) {
       drawPointer(m, dim.xMid, top + 10, 0);
       for (int i = -540; i < 540; i = i + 5) {

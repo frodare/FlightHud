@@ -29,7 +29,7 @@ public class PitchIndicator extends HudComponent {
 
     drawReferenceMark(mc, m, yHorizon, CONFIG.pitchLadder_optimumClimbAngle);
     drawReferenceMark(mc, m, yHorizon, CONFIG.pitchLadder_optimumGlideAngle);
-    
+
     if (CONFIG.pitchLadder_showHorizon) {
       pitchData.l1 -= pitchData.margin;
       pitchData.r2 += pitchData.margin;
@@ -59,12 +59,11 @@ public class PitchIndicator extends HudComponent {
     }
 
     float y = (-degrees * dim.degreesPerPixel) + yHorizon;
-    
 
     if (y < dim.tFrame || y > dim.bFrame) {
       return;
     }
-    
+
     float width = (pitchData.l2 - pitchData.l1) * 0.45f;
     float l1 = pitchData.l2 - width;
     float r2 = pitchData.r1 + width;
@@ -72,7 +71,6 @@ public class PitchIndicator extends HudComponent {
     drawHorizontalLineDashed(m, l1, pitchData.l2, y, 3);
     drawHorizontalLineDashed(m, pitchData.r1, r2, y, 3);
   }
-
 
   private void drawDegreeBar(MinecraftClient mc, MatrixStack m, float degree, float y) {
 
