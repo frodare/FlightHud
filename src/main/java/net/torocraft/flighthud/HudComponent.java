@@ -107,7 +107,7 @@ public abstract class HudComponent extends DrawableHelper {
 
 
   public static void fill(MatrixStack matrices, float x1, float y1, float x2, float y2) {
-    fill(matrices.peek().getModel(), x1, y1, x2, y2);
+    fill(matrices.peek().getPositionMatrix(), x1, y1, x2, y2);
   }
 
   private static void fill(Matrix4f matrix, float x1, float y1, float x2, float y2) {
