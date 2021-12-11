@@ -10,9 +10,12 @@ public class SettingsConfig implements IConfig {
     NONE, MIN, FULL
   }
 
-  public boolean watchForConfigChanges = false;
+  public boolean watchForConfigChanges = true;
   public String displayModeWhenFlying = DisplayMode.FULL.toString();
   public String displayModeWhenNotFlying = DisplayMode.NONE.toString();
+  public boolean calculateRoll = true;
+  public float rollTurningForce = 1.25f;
+  public float rollSmoothing = 0.85f;
 
   @Override
   public void update() {
@@ -31,13 +34,13 @@ public class SettingsConfig implements IConfig {
 
   public void toggleDisplayMode() {
     MinecraftClient client = MinecraftClient.getInstance();
-    
+
     if (client.player.isFallFlying()) {
       displayModeWhenFlying = toggle(displayModeWhenFlying);
     } else {
       displayModeWhenNotFlying = toggle(displayModeWhenNotFlying);
     }
-    
+
     FlightHud.CONFIG_LOADER_SETTINGS.save(this);
   }
 

@@ -7,7 +7,7 @@ public class HudConfig implements IConfig {
   public transient int color = Color.GREEN.getRGB();
   public transient float halfThickness = 0.5f;
 
-  public boolean watchForConfigChanges = false;
+  public boolean watchForConfigChanges = true;
 
   public float width = 0.6f;
   public float height = 0.6f;
@@ -35,6 +35,8 @@ public class HudConfig implements IConfig {
   public boolean pitchLadder_showLadder = true;
   public float pitchLadder_optimumGlideAngle = -2;
   public float pitchLadder_optimumClimbAngle = 55;
+  public boolean pitchLadder_showRoll = true;
+  public boolean pitchLadder_reverseRoll = false;
 
   public boolean speed_showScale = true;
   public boolean speed_showReadout = true;

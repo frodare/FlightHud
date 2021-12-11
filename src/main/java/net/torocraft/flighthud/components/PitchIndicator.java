@@ -2,6 +2,7 @@ package net.torocraft.flighthud.components;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3f;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -23,6 +24,18 @@ public class PitchIndicator extends HudComponent {
     float horizonOffset = computer.pitch * dim.degreesPerPixel;
     float yHorizon = dim.yMid + horizonOffset;
 
+    float a = dim.yMid;
+    float b = dim.xMid;
+
+    float roll = computer.roll * (CONFIG.pitchLadder_reverseRoll ? -1 : 1);
+
+    if (CONFIG.pitchLadder_showRoll) {
+      m.push();
+      m.translate(b, a, 0);
+      m.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(roll));
+      m.translate(-b, -a, 0);
+    }
+
     if (CONFIG.pitchLadder_showLadder) {
       drawLadder(mc, m, yHorizon);
     }
@@ -36,6 +49,9 @@ public class PitchIndicator extends HudComponent {
       drawDegreeBar(mc, m, 0, yHorizon);
     }
 
+    if (CONFIG.pitchLadder_showRoll) {
+      m.pop();
+    }
   }
 
   private void drawLadder(MinecraftClient mc, MatrixStack m, float yHorizon) {
