@@ -63,7 +63,7 @@ public class FlightHud implements ClientModInitializer {
   private static void setupCommand() {
     ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
       dispatcher.register(ClientCommandManager.literal("flighthud")
-              .then(ClientCommandManager.literal("toggle").executes(new SwitchDisplayModeCommand())));
+          .then(ClientCommandManager.literal("toggle").executes(new SwitchDisplayModeCommand())));
     });
   }
 }
