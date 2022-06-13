@@ -1,18 +1,18 @@
 package net.torocraft.flighthud;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.server.command.CommandManager;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
 import net.torocraft.flighthud.config.loader.ConfigLoader;
 import org.lwjgl.glfw.GLFW;
 
-public class FlightHud implements ModInitializer {
+public class FlightHud implements ClientModInitializer {
   public static final String MODID = "flighthud";
 
   public static SettingsConfig CONFIG_SETTINGS = new SettingsConfig();
@@ -39,7 +39,7 @@ public class FlightHud implements ModInitializer {
   private static KeyBinding keyBinding;
 
   @Override
-  public void onInitialize() {
+  public void onInitializeClient() {
     CONFIG_LOADER_SETTINGS.load();
     CONFIG_LOADER_FULL.load();
     CONFIG_LOADER_MIN.load();
@@ -61,8 +61,9 @@ public class FlightHud implements ModInitializer {
   }
 
   private static void setupCommand() {
-    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-      dispatcher.register(CommandManager.literal("flighthud")
-        .then(CommandManager.literal("toggle").executes(new SwitchDisplayModeCommand()))));
+    ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+      dispatcher.register(ClientCommandManager.literal("flighthud")
+              .then(ClientCommandManager.literal("toggle").executes(new SwitchDisplayModeCommand())));
+    });
   }
 }

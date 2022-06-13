@@ -14,9 +14,9 @@
   },
   "license": "GPL3",
   "icon": "assets/flighthud/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "net.torocraft.flighthud.FlightHud"
     ]
   },

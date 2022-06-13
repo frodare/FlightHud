@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
 
-	@Unique
+  @Unique
   private final HudRenderer hud = new HudRenderer();
 
   @Final
