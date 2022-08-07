@@ -96,6 +96,8 @@ public class FlightComputer {
     rollAngle = (float) ((1.0 - rollSmoothing) * rollAngle + rollSmoothing * previousRollAngle);
     previousRollAngle = rollAngle;
 
+    //Make rollAngle follow terrain
+    rollAngle = rollAngle * -1;
     return rollAngle;
   }
 
