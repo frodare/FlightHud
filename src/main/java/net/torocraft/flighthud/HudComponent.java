@@ -125,7 +125,6 @@ public abstract class HudComponent extends DrawableHelper {
     float b = (float) (color & 255) / 255.0F;
     BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
     RenderSystem.enableBlend();
-    RenderSystem.disableTexture();
     RenderSystem.defaultBlendFunc();
     RenderSystem.setShader(GameRenderer::getPositionColorProgram);
     bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -134,7 +133,6 @@ public abstract class HudComponent extends DrawableHelper {
     bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(r, g, b, alpha).next();
     bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(r, g, b, alpha).next();
     BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-    RenderSystem.enableTexture();
     RenderSystem.disableBlend();
   }
 }
