@@ -2,13 +2,14 @@ package net.torocraft.flighthud;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix3f;
 
 public class FlightComputer {
   private static final float TICKS_PER_SECOND = 20;
@@ -28,12 +29,13 @@ public class FlightComputer {
   public Float distanceFromGround;
   public Float elytraHealth;
 
-  public void update(MinecraftClient client, float partial) {
+  public void update(MinecraftClient client, Matrix3f normalMatrix) {
+    heading = computeHeading(client, normalMatrix);
+    pitch = computePitch(client, normalMatrix);
+    roll = computeRoll(client, normalMatrix);
+
     velocity = client.player.getVelocity();
-    pitch = computePitch(client, partial);
     speed = computeSpeed(client);
-    roll = computeRoll(client, partial);
-    heading = computeHeading(client);
     altitude = computeAltitude(client);
     groundLevel = computeGroundLevel(client);
     distanceFromGround = computeDistanceFromGround(client, altitude, groundLevel);
@@ -66,42 +68,35 @@ public class FlightComputer {
     return toHeading((float) Math.toDegrees(-Math.atan2(velocity.x, velocity.z)));
   }
 
-  /**
-   * Roll logic is from:
-   * https://github.com/Jorbon/cool_elytra/blob/main/src/main/java/edu/jorbonism/cool_elytra/mixin/GameRendererMixin.java
-   * to enable both mods will sync up when used together.
-   */
-  private float computeRoll(MinecraftClient client, float partial) {
+  //region Camera Angles
+
+  private float computeRoll(MinecraftClient client, Matrix3f normalMatrix) {
     if (!FlightHud.CONFIG_SETTINGS.calculateRoll) {
-      return 0;
+      return 0.0f;
     }
 
-    float wingPower = FlightHud.CONFIG_SETTINGS.rollTurningForce;
-    float rollSmoothing = FlightHud.CONFIG_SETTINGS.rollSmoothing;
-    Vec3d facing = client.player.getRotationVecClient();
-    Vec3d velocity = client.player.getVelocity();
-    double horizontalFacing2 = facing.horizontalLengthSquared();
-    double horizontalSpeed2 = velocity.horizontalLengthSquared();
+    float y = normalMatrix.getRowColumn(0, 1);
+    float x = normalMatrix.getRowColumn(1, 1);
+    return (float) Math.toDegrees(Math.atan2(y, x));
+  }
 
-    float rollAngle = 0.0f;
-
-    if (horizontalFacing2 > 0.0D && horizontalSpeed2 > 0.0D) {
-      double dot = (velocity.x * facing.x + velocity.z * facing.z) / Math.sqrt(horizontalFacing2 * horizontalSpeed2);
-      dot = MathHelper.clamp(dot, -1, 1);
-      double direction = Math.signum(velocity.x * facing.z - velocity.z * facing.x);
-      rollAngle = (float) (Math.atan(Math.sqrt(horizontalSpeed2) * Math.acos(dot) * wingPower) * direction
-          * 57.29577951308);
+  private float computePitch(MinecraftClient client, Matrix3f normalMatrix) {
+    if (client.player == null) {
+      return 0.0f;
     }
 
-    rollAngle = (float) ((1.0 - rollSmoothing) * rollAngle + rollSmoothing * previousRollAngle);
-    previousRollAngle = rollAngle;
-
-    return rollAngle;
+    return -client.player.getPitch();
   }
 
-  private float computePitch(MinecraftClient client, float parital) {
-    return client.player.getPitch(parital) * -1;
+  private float computeHeading(MinecraftClient client, Matrix3f normalMatrix) {
+    if (client.player == null) {
+      return 0.0f;
+    }
+
+    return toHeading(client.player.getYaw());
   }
+
+  //endregion
 
   private boolean isGround(BlockPos pos, MinecraftClient client) {
     BlockState block = client.world.getBlockState(pos);
@@ -134,10 +129,6 @@ public class FlightComputer {
 
   private float computeAltitude(MinecraftClient client) {
     return (float) client.player.getPos().y - 1;
-  }
-
-  private float computeHeading(MinecraftClient client) {
-    return toHeading(client.player.getYaw());
   }
 
   private float computeSpeed(MinecraftClient client) {

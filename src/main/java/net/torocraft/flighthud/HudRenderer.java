@@ -1,5 +1,6 @@
 package net.torocraft.flighthud;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.components.AltitudeIndicator;
@@ -11,10 +12,11 @@ import net.torocraft.flighthud.components.PitchIndicator;
 import net.torocraft.flighthud.components.SpeedIndicator;
 import net.torocraft.flighthud.config.SettingsConfig.DisplayMode;
 
+import static net.torocraft.flighthud.FlightHud.computer;
+
 public class HudRenderer extends HudComponent {
 
   private final Dimensions dim = new Dimensions();
-  private final FlightComputer computer = new FlightComputer();
   private static final String FULL = DisplayMode.FULL.toString();
   private static final String MIN = DisplayMode.MIN.toString();
 
@@ -57,7 +59,6 @@ public class HudRenderer extends HudComponent {
         m.scale(scale, scale, scale);
       }
 
-      computer.update(client, partial);
       dim.update(client);
 
       for (HudComponent component : components) {
