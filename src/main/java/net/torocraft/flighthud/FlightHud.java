@@ -38,6 +38,8 @@ public class FlightHud implements ClientModInitializer {
 
   private static KeyBinding keyBinding;
 
+  public static final FlightComputer computer = new FlightComputer();
+
   @Override
   public void onInitializeClient() {
     CONFIG_LOADER_SETTINGS.load();
