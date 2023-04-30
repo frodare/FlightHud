@@ -69,19 +69,19 @@ public class HudRenderer extends HudComponent {
         m.popPose();
         fps.tps = 2;
       }
-    if (fps.tps == 2){
+    else if (fps.tps == 2){
       fps.tps = 3;
     }
-    if (fps.tps == 3){
+    else if (fps.tps == 3){
       fps.tps = 4;
     }
-    if (fps.tps == 4){
+    else if (fps.tps == 4){
       fps.tps = 5;
     }
-    if (fps.tps == 5){
+    else if (fps.tps == 5){
       fps.tps = 6;
     }
-    if (fps.tps == 6){
+    else if (fps.tps == 6){
       fps.tps = 1;
     }
     } catch (Exception e) {
