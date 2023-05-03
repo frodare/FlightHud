@@ -1,5 +1,7 @@
 # Flight HUD
 
+Try Octol1ttle's version that is 1.19.3 and 1.19.4 compatible and adds features and bugfixes
+
 __Flight HUD__ is a client side Fabric Minecraft Mod that adds a flight style HUD like one you would see in a flight simulator.
 
 ![HUD Screenshot](images/hud2020-07-07.png?raw=true "HUD Screenshot")
