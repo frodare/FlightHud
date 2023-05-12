@@ -62,6 +62,6 @@ Displays a flight styled hud while flying with elytra.
 [[dependencies.flighthud]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1]"
+    versionRange="[1.18,1.18.2]"
     ordering="NONE"
     side="BOTH"
