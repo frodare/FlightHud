@@ -46,7 +46,7 @@ public class FlightHud {
   }
 
   private void setup(final FMLCommonSetupEvent event) {
-    keyBinding = new KeyMapping("key.flighthud.toggleDisplayModed", GLFW.GLFW_KEY_GRAVE_ACCENT, "category.flighthud.toggleDisplayMode");
+    keyBinding = new KeyMapping("key.flighthud.toggleDisplayMode", GLFW.GLFW_KEY_GRAVE_ACCENT, "category.flighthud.toggleDisplayMode");
     CONFIG_LOADER_SETTINGS.load();
     CONFIG_LOADER_FULL.load();
     CONFIG_LOADER_MIN.load();
