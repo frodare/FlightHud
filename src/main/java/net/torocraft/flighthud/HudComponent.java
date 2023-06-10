@@ -2,19 +2,13 @@ package net.torocraft.flighthud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.config.HudConfig;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
-public abstract class HudComponent extends DrawableHelper {
+public abstract class HudComponent{
 
   public abstract void render(MatrixStack m, float partial, MinecraftClient client);
 
@@ -29,8 +23,8 @@ public abstract class HudComponent extends DrawableHelper {
     m.translate(x, y, 0);
 //    m.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(rot + 45));
     m.multiply(new org.joml.Quaternionf().fromAxisAngleDeg(new org.joml.Vector3f(0, 0, 1),rot+45));
-    drawVerticalLine(m, 0, 0, 5, CONFIG.color);
-    drawHorizontalLine(m, 0, 5, 0, CONFIG.color);
+    drawVerticalLine(m, 0, 0, 5);//, CONFIG.color
+    drawHorizontalLine(m, 0, 5, 0);//, CONFIG.color
     m.pop();
   }
 
@@ -48,7 +42,17 @@ public abstract class HudComponent extends DrawableHelper {
 
   protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y,
       int color) {
-    mc.textRenderer.draw(m, s, x, y, CONFIG.color);
+    mc.textRenderer.draw(
+            s,
+            x,
+            y,
+            color,
+            false,
+            m.peek().getPositionMatrix(),
+            mc.getBufferBuilders().getOutlineVertexConsumers(),
+            TextRenderer.TextLayerType.NORMAL,
+            0,
+            255);//, CONFIG.color//m,
   }
 
   protected void drawRightAlignedFont(MinecraftClient mc, MatrixStack m, String s, float x,
