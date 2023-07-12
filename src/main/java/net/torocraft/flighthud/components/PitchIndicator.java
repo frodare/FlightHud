@@ -1,8 +1,9 @@
 package net.torocraft.flighthud.components;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
 import net.torocraft.flighthud.HudComponent;
@@ -12,13 +13,15 @@ public class PitchIndicator extends HudComponent {
   private final FlightComputer computer;
   private final PitchIndicatorData pitchData = new PitchIndicatorData();
 
+  private DrawContext drawContext;
+
   public PitchIndicator(FlightComputer computer, Dimensions dim) {
     this.computer = computer;
     this.dim = dim;
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+  public void render(DrawContext context, float partial, MinecraftClient mc) {
     pitchData.update(dim);
 
     float horizonOffset = computer.pitch * dim.degreesPerPixel;
@@ -29,10 +32,13 @@ public class PitchIndicator extends HudComponent {
 
     float roll = computer.roll * (CONFIG.pitchLadder_reverseRoll ? -1 : 1);
 
+    drawContext = context;
+    MatrixStack m = drawContext.getMatrices();
+
     if (CONFIG.pitchLadder_showRoll) {
       m.push();
       m.translate(b, a, 0);
-      m.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(roll));
+      m.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(roll));
       m.translate(-b, -a, 0);
     }
 
@@ -106,10 +112,10 @@ public class PitchIndicator extends HudComponent {
     int fontVerticalOffset = degree >= 0 ? 0 : 6;
 
     drawFont(mc, m, String.format("%d", i(Math.abs(degree))), pitchData.r2 + 6,
-        (float) y - fontVerticalOffset);
+        y - fontVerticalOffset, drawContext);
 
     drawFont(mc, m, String.format("%d", i(Math.abs(degree))), pitchData.l1 - 17,
-        (float) y - fontVerticalOffset);
+        y - fontVerticalOffset, drawContext);
   }
 
   private static class PitchIndicatorData {
