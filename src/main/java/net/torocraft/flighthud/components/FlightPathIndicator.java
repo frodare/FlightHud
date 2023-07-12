@@ -1,6 +1,7 @@
 package net.torocraft.flighthud.components;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
@@ -16,10 +17,12 @@ public class FlightPathIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient client) {
+  public void render(DrawContext context, float partial, MinecraftClient client) {
     if (!CONFIG.flightPath_show) {
       return;
     }
+
+    MatrixStack m = context.getMatrices();
 
     float deltaPitch = computer.pitch - computer.flightPitch;
     float deltaHeading = wrapHeading(computer.flightHeading) - wrapHeading(computer.heading);
