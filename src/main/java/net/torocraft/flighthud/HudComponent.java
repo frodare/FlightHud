@@ -139,7 +139,8 @@ public abstract class HudComponent extends GuiComponent {
     bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(r, g, b, alpha).endVertex();
     bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(r, g, b, alpha).endVertex();
     bufferBuilder.end();
-    BufferUploader.end(bufferBuilder);
+    //BufferUploader.end(bufferBuilder);
+    //BufferUploader.end()
     RenderSystem.enableTexture();
     RenderSystem.disableBlend();
   }

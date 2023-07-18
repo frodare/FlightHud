@@ -1,12 +1,12 @@
 package net.torocraft.flighthud;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
 import net.torocraft.flighthud.config.loader.ConfigLoader;
@@ -54,14 +54,14 @@ public class FlightHud {
     setupCommand();
   }
 
-  private void onKeyInput(KeyInputEvent event) {
+  private void onKeyInput(InputEvent.Key event) {
     if (keyBinding.consumeClick()) {
       CONFIG_SETTINGS.toggleDisplayMode();
     }
   }
 
   private static void setupKeycCode() {
-    ClientRegistry.registerKeyBinding(keyBinding);
+    //register(keyBinding);
   }
 
   private static void setupCommand() {
