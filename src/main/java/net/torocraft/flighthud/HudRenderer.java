@@ -11,8 +11,10 @@ import net.torocraft.flighthud.components.PitchIndicator;
 import net.torocraft.flighthud.components.SpeedIndicator;
 import net.torocraft.flighthud.config.SettingsConfig.DisplayMode;
 
+class fps {
+  public static int tps = 1;
+}
 public class HudRenderer extends HudComponent {
-
   private final Dimensions dim = new Dimensions();
   private final FlightComputer computer = new FlightComputer();
   private static final String FULL = DisplayMode.FULL.toString();
@@ -50,20 +52,24 @@ public class HudRenderer extends HudComponent {
     }
 
     try {
-      m.pushPose();
+      if (fps.tps % 6 == 0 ){
+        m.pushPose();
 
-      if (HudComponent.CONFIG.scale != 1d) {
-        float scale = 1 / (float) HudComponent.CONFIG.scale;
-        m.scale(scale, scale, scale);
-      }
+        if (HudComponent.CONFIG.scale != 1d) {
+          float scale = 1 / (float) HudComponent.CONFIG.scale;
+          m.scale(scale, scale, scale);
+        }
 
-      computer.update(client, partial);
-      dim.update(client);
+        computer.update(client, partial);
+        dim.update(client);
 
-      for (HudComponent component : components) {
-        component.render(m, partial, client);
-      }
-      m.popPose();
+        for (HudComponent component : components) {
+          component.render(m, partial, client);
+        }
+        m.popPose();
+        fps.tps = 2;
+      };
+    fps.tps = ++fps.tps;
     } catch (Exception e) {
       e.printStackTrace();
     }

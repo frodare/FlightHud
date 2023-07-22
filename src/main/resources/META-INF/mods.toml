@@ -24,13 +24,13 @@ modId="flighthud" #mandatory
 version="${file.jarVersion}" #mandatory
 
  # A display name for the mod
-displayName="FlightHUD" #mandatory
+displayName="FlightHUD reloaded" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="https://www.curseforge.com/minecraft/mc-mods/flighthud" #optional
+displayURL="https://www.mcmod.cn/class/10172.html" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="flighthud.png" #optional
@@ -39,7 +39,7 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/flighthud" #optional
 #credits="Thanks for this example mod goes to Java" #optional
 
 # A text field displayed in the mod UI
-authors="frodare" #optional
+authors="frodare,HTony03" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
@@ -62,6 +62,6 @@ Displays a flight styled hud while flying with elytra.
 [[dependencies.flighthud]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1]"
+    versionRange="[1.18,1.18.2]"
     ordering="NONE"
     side="BOTH"
