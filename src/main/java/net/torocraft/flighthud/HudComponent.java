@@ -2,16 +2,15 @@ package net.torocraft.flighthud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
-import net.torocraft.flighthud.config.HudConfig;
 import org.joml.Matrix4f;
+import net.torocraft.flighthud.config.HudConfig;
 
-public abstract class HudComponent extends DrawableHelper {
-
-  public abstract void render(MatrixStack m, float partial, MinecraftClient client);
+public abstract class HudComponent {
+  public abstract void render(DrawContext context, float tickDelta, MinecraftClient client);
 
   public static HudConfig CONFIG;
 
@@ -23,9 +22,8 @@ public abstract class HudComponent extends DrawableHelper {
     m.push();
     m.translate(x, y, 0);
     m.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rot + 45));
-//    m.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(rot + 45));
-    drawVerticalLine(m, 0, 0, 5, CONFIG.color);
-    drawHorizontalLine(m, 0, 5, 0, CONFIG.color);
+    drawVerticalLine(m, 0, 0, 5);
+    drawHorizontalLine(m, 0, 5, 0);
     m.pop();
   }
 
@@ -37,19 +35,19 @@ public abstract class HudComponent extends DrawableHelper {
     return degrees;
   }
 
-  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y) {
-    drawFont(mc, m, s, x, y, CONFIG.color);
+  protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y, DrawContext context) {
+    drawFont(mc, m, s, x, y, CONFIG.color, context);
   }
 
   protected void drawFont(MinecraftClient mc, MatrixStack m, String s, float x, float y,
-      int color) {
-    mc.textRenderer.draw(m, s, x, y, CONFIG.color);
+      int color, DrawContext context) {
+    context.drawText(mc.textRenderer, s, (int) x, (int) y, CONFIG.color, false);
   }
 
   protected void drawRightAlignedFont(MinecraftClient mc, MatrixStack m, String s, float x,
-      float y) {
+      float y, DrawContext context) {
     int w = mc.textRenderer.getWidth(s);
-    drawFont(mc, m, s, x - w, y);
+    drawFont(mc, m, s, x - w, y, context);
   }
 
   protected void drawBox(MatrixStack m, float x, float y, float w, float h) {
