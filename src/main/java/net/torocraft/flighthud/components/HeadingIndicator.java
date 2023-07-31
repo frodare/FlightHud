@@ -1,6 +1,7 @@
 package net.torocraft.flighthud.components;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.Dimensions;
 import net.torocraft.flighthud.FlightComputer;
@@ -17,7 +18,7 @@ public class HeadingIndicator extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient mc) {
+  public void render(DrawContext context, float partial, MinecraftClient mc) {
     float left = dim.lFrame;
     float right = dim.rFrame;
     float top = dim.tFrame - 10;
@@ -26,8 +27,10 @@ public class HeadingIndicator extends HudComponent {
     float northOffset = computer.heading * dim.degreesPerPixel;
     float xNorth = dim.xMid - northOffset;
 
+    MatrixStack m = context.getMatrices();
+
     if (CONFIG.heading_showReadout) {
-      drawFont(mc, m, String.format("%03d", i(wrapHeading(computer.heading))), dim.xMid - 8, yText);
+      drawFont(mc, m, String.format("%03d", i(wrapHeading(computer.heading))), dim.xMid - 8, yText, context);
       drawBox(m, dim.xMid - 15, yText - 1.5f, 30, 10);
     }
 
@@ -40,14 +43,14 @@ public class HeadingIndicator extends HudComponent {
 
         if (i % 15 == 0) {
           if (i % 90 == 0) {
-            drawFont(mc, m, headingToDirection(i), x - 2, yText + 10);
-            drawFont(mc, m, headingToAxis(i), x - 8, yText + 20);
+            drawFont(mc, m, headingToDirection(i), x - 2, yText + 10, context);
+            drawFont(mc, m, headingToAxis(i), x - 8, yText + 20, context);
           } else {
             drawVerticalLine(m, x, top + 3, top + 10);
           }
 
           if (!CONFIG.heading_showReadout || x <= dim.xMid - 26 || x >= dim.xMid + 26) {
-            drawFont(mc, m, String.format("%03d", i(wrapHeading(i))), x - 8, yText);
+            drawFont(mc, m, String.format("%03d", i(wrapHeading(i))), x - 8, yText, context);
           }
         } else {
           drawVerticalLine(m, x, top + 6, top + 10);

@@ -1,6 +1,7 @@
 package net.torocraft.flighthud;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.torocraft.flighthud.components.AltitudeIndicator;
 import net.torocraft.flighthud.components.ElytraHealthIndicator;
@@ -42,7 +43,7 @@ public class HudRenderer extends HudComponent {
   }
 
   @Override
-  public void render(MatrixStack m, float partial, MinecraftClient client) {
+  public void render(DrawContext context, float tickDelta, MinecraftClient client) {
     setupConfig(client);
 
     if (HudComponent.CONFIG == null) {
@@ -50,6 +51,8 @@ public class HudRenderer extends HudComponent {
     }
 
     try {
+
+      MatrixStack m = context.getMatrices();
       m.push();
 
       if (HudComponent.CONFIG.scale != 1d) {
@@ -57,11 +60,11 @@ public class HudRenderer extends HudComponent {
         m.scale(scale, scale, scale);
       }
 
-      computer.update(client, partial);
+      computer.update(client, tickDelta);
       dim.update(client);
 
       for (HudComponent component : components) {
-        component.render(m, partial, client);
+        component.render(context, tickDelta, client);
       }
       m.pop();
     } catch (Exception e) {
