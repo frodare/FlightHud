@@ -3,14 +3,22 @@ package net.torocraft.flighthud;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+//import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
 import net.torocraft.flighthud.config.loader.ConfigLoader;
 import org.lwjgl.glfw.GLFW;
+
+
+
 
 @Mod(FlightHud.MODID)
 public class FlightHud {
@@ -19,7 +27,9 @@ public class FlightHud {
   public static SettingsConfig CONFIG_SETTINGS = new SettingsConfig();
   public static HudConfig CONFIG_MIN = new HudConfig();
   public static HudConfig CONFIG_FULL = new HudConfig();
-  
+
+  public static IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
   public static ConfigLoader<SettingsConfig> CONFIG_LOADER_SETTINGS = new ConfigLoader<>(
     new SettingsConfig(), 
     FlightHud.MODID + ".settings.json", 
@@ -38,6 +48,9 @@ public class FlightHud {
     config -> FlightHud.CONFIG_MIN = config);
 
   private static KeyMapping keyBinding;
+  static Options options = Minecraft.getInstance().options;
+
+
 
   public FlightHud() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -54,14 +67,34 @@ public class FlightHud {
     setupCommand();
   }
 
-  private void onKeyInput(InputEvent.Key event) {
+  private void onKeyInput(InputEvent event) {
     if (keyBinding.consumeClick()) {
       CONFIG_SETTINGS.toggleDisplayMode();
     }
   }
 
+
+  //@SubscribeEvent
+  private static void testsetup(RegisterKeyMappingsEvent event){
+    event.register(keyBinding);
+  }
   private static void setupKeycCode() {
-    //register(keyBinding);
+    //RegisterKeyMappingsEvent.register(keyBinding);
+    //RegisterKeyMappingsEvent registerKeyMappingsEvent = options;
+    testsetup(new RegisterKeyMappingsEvent(options));
+    //RegisterKeyMappingsEvent(options);
+
+
+
+
+
+
+    //key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
+    //if (!key.modifiable)
+    //  continue;
+    //MinecraftForge.EVENT_BUS.register(keyBinding);
+    //MinecraftForge.EVENT_BUS.register(keyBinding);
+    //lightHud.register(keyBinding);
   }
 
   private static void setupCommand() {
