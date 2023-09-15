@@ -84,11 +84,6 @@ public class FlightHud {
     testsetup(new RegisterKeyMappingsEvent(options));
     //RegisterKeyMappingsEvent(options);
 
-
-
-
-
-
     //key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
     //if (!key.modifiable)
     //  continue;
