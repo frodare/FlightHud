@@ -9,16 +9,22 @@ import net.torocraft.flighthud.components.HeadingIndicator;
 import net.torocraft.flighthud.components.LocationIndicator;
 import net.torocraft.flighthud.components.PitchIndicator;
 import net.torocraft.flighthud.components.SpeedIndicator;
+import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig.DisplayMode;
 
-class fps {
-  public static int tps = 1;
-}
+
 public class HudRenderer extends HudComponent {
   private final Dimensions dim = new Dimensions();
   private final FlightComputer computer = new FlightComputer();
   private static final String FULL = DisplayMode.FULL.toString();
   private static final String MIN = DisplayMode.MIN.toString();
+
+
+  HudConfig config = HudComponent.CONFIG;
+
+  int frames;
+  public int allframes = 0;
+
 
   private final HudComponent[] components =
       new HudComponent[] {new FlightPathIndicator(computer, dim), new LocationIndicator(dim),
@@ -52,7 +58,14 @@ public class HudRenderer extends HudComponent {
     }
 
     try {
-      if (fps.tps % 6 == 0 ){
+
+      try{
+        frames = config.refreshing_rate;
+      } catch (Exception e2){
+        e2.printStackTrace();
+        frames = 8;
+      }
+      if (allframes % frames == 0 ){
         m.pushPose();
 
         if (HudComponent.CONFIG.scale != 1d) {
@@ -67,9 +80,11 @@ public class HudRenderer extends HudComponent {
           component.render(m, partial, client);
         }
         m.popPose();
-        fps.tps = 2;
-      };
-    fps.tps = ++fps.tps;
+      }
+      allframes = ++allframes;
+      if (allframes == 100){
+        allframes = 0;
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

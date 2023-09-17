@@ -1,17 +1,15 @@
 package net.torocraft.flighthud;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-//import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig;
 import net.torocraft.flighthud.config.loader.ConfigLoader;
@@ -84,11 +82,6 @@ public class FlightHud {
     testsetup(new RegisterKeyMappingsEvent(options));
     //RegisterKeyMappingsEvent(options);
 
-    //key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
-    //if (!key.modifiable)
-    //  continue;
-    //MinecraftForge.EVENT_BUS.register(keyBinding);
-    //MinecraftForge.EVENT_BUS.register(keyBinding);
     //lightHud.register(keyBinding);
   }
 
