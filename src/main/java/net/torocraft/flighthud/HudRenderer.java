@@ -9,14 +9,22 @@ import net.torocraft.flighthud.components.HeadingIndicator;
 import net.torocraft.flighthud.components.LocationIndicator;
 import net.torocraft.flighthud.components.PitchIndicator;
 import net.torocraft.flighthud.components.SpeedIndicator;
+import net.torocraft.flighthud.config.HudConfig;
 import net.torocraft.flighthud.config.SettingsConfig.DisplayMode;
 
-public class HudRenderer extends HudComponent {
 
+public class HudRenderer extends HudComponent {
   private final Dimensions dim = new Dimensions();
   private final FlightComputer computer = new FlightComputer();
   private static final String FULL = DisplayMode.FULL.toString();
   private static final String MIN = DisplayMode.MIN.toString();
+
+
+  HudConfig config = HudComponent.CONFIG;
+
+  int frames;
+  public int allframes = 0;
+
 
   private final HudComponent[] components =
       new HudComponent[] {new FlightPathIndicator(computer, dim), new LocationIndicator(dim),
@@ -50,20 +58,33 @@ public class HudRenderer extends HudComponent {
     }
 
     try {
-      m.pushPose();
 
-      if (HudComponent.CONFIG.scale != 1d) {
-        float scale = 1 / (float) HudComponent.CONFIG.scale;
-        m.scale(scale, scale, scale);
+      try{
+        frames = config.refreshing_rate;
+      } catch (Exception e2){
+        e2.printStackTrace();
+        frames = 8;
       }
+      if (allframes % frames == 0 ){
+        m.pushPose();
 
-      computer.update(client, partial);
-      dim.update(client);
+        if (HudComponent.CONFIG.scale != 1d) {
+          float scale = 1 / (float) HudComponent.CONFIG.scale;
+          m.scale(scale, scale, scale);
+        }
 
-      for (HudComponent component : components) {
-        component.render(m, partial, client);
+        computer.update(client, partial);
+        dim.update(client);
+
+        for (HudComponent component : components) {
+          component.render(m, partial, client);
+        }
+        m.popPose();
       }
-      m.popPose();
+      allframes = ++allframes;
+      if (allframes == 100){
+        allframes = 0;
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

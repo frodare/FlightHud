@@ -30,8 +30,8 @@ public class Dimensions {
       hScreen = hScreen * c.scale;
       wScreen = wScreen * c.scale;
     }
-
-    degreesPerPixel = (float) (hScreen / client.options.fov);
+    float fov = client.options.fov().get().floatValue();
+    degreesPerPixel = (float) (hScreen / fov);
     xMid = wScreen / 2;
     yMid = hScreen / 2;
 

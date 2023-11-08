@@ -48,6 +48,8 @@ public class HudConfig implements IConfig {
   public boolean heading_showReadout = true;
   public boolean heading_showOrdinals = true;
 
+  public int refreshing_rate = 6;
+
   @Override
   public void update() {
     updateThickness();
